@@ -1,0 +1,82 @@
+:root{
+/* Brand */
+--brand-primary:#865EFF;
+--brand-primary-hover:#744FE6;
+--brand-primary-press:#6442C9;
+--brand-primary-soft:rgba(134,94,255,0.06);
+--brand-primary-soft-2:rgba(134,94,255,0.12);
+--brand-primary-tint:rgba(134,94,255,0.10);
+--brand-primary-border:#C9B8FF;
+--brand-on-primary:#FFFFFF;
+--brand-grad-from:#A57CFE;
+--brand-grad-to:#6084FB;
+--brand-gradient:linear-gradient(180deg,#A57CFE 0%,#6084FB 100%); /* @kind color */
+--brand-gradient-135:linear-gradient(135deg,#A57CFE 0%,#6084FB 100%); /* @kind color */
+--accent-coral:#FF8A7A;
+--accent-pink:#FF9FB2;
+--accent-amber:#FFCD66;
+/* Success green scale (6 press · 5 main · 4 hover · 3 disabled · 2 border · 1 bg · 0 light bg) */
+--green-6:#309546;--green-5:#46CA43;--green-4:#67D563;--green-3:#8BDF86;--green-2:#B0EAAB;--green-1:#D7F4D4;--green-0:#EFFAEE;
+/* Error red scale */
+--danger-6:#D73415;--danger-5:#FF2621;--danger-4:#FF574D;--danger-3:#FF867A;--danger-2:#FFB1A6;--danger-1:#FFDAD3;--danger-0:#FFF1EE;
+/* Neutrals */
+--gray-0:#FFFFFF;
+--gray-50:#F9FAFB;
+--gray-100:#F2F3F5;
+--gray-200:#E6E8EA;
+--gray-300:#C6C9CD;
+--gray-400:#8B9097;
+--gray-500:#5A6068;
+--gray-700:#33373D;
+--gray-900:#1C1F23;
+/* Semantic roles */
+--fg-1:var(--gray-900);
+--fg-2:var(--gray-500);
+--fg-3:var(--gray-400);
+--fg-on-dark:#FFFFFF;
+--bg-page:var(--gray-50);
+--bg-surface:#FFFFFF;
+--bg-sunken:var(--gray-100);
+--bg-workspace:#F4F4F7;
+--bg-tab-track:#E9E9EF;
+--bg-reader-canvas:#EEF0F3;
+--bg-hero:linear-gradient(180deg,#F4F1FF 0%,#F7F9FF 55%,#FFFFFF 100%); /* @kind color */
+--bg-mascot:#EEF2FF;
+--bg-mascot-alt:#F6F2FF;
+--bg-ai-added:#F6F2FF;
+--bg-overlay:rgba(28,31,35,0.40);
+--border:var(--gray-200);
+--border-strong:var(--gray-300);
+--border-subtle:#EFEFF3;
+/* Status pastels */
+--success:#3E9B36;
+--success-strong:#B0EAAB;
+--success-soft:#D7F4D4;
+--success-surface:#F3FBF2;
+--success-text:#2F7A29;
+--success-text-strong:#23611E;
+--error:#E0533F;
+--error-strong:#FFB1A6;
+--error-soft:#FFDAD3;
+--error-surface:#FFF4F1;
+--error-text:#9C3A2B;
+--error-text-strong:#B23A2A;
+--warning:#FFB020;
+--warning-400:#FFCD66;
+--warning-300:#FFE9B8;
+--warning-200:#FFF2CC;
+--warning-100:#FFFAEB;
+--warning-text:#9A6300;
+--excerpt-bg:#FFFCF3;
+--excerpt-border:#FFE9B8;
+--info:#4E7BF2;
+--info-soft:#DDE8FE;
+--info-text:#2F5BC9;
+--processing-text:#6442C9;
+/* Source-type tiles (bg / fg) */
+--src-pdf-bg:#FFDAD3;--src-pdf-fg:#B23A2A;
+--src-ppt-bg:#FFE9B8;--src-ppt-fg:#9A6300;
+--src-doc-bg:#DDE8FE;--src-doc-fg:#2F5BC9;
+--src-img-bg:#D7F4D4;--src-img-fg:#2F7A29;
+--src-media-bg:#EDE5FF;--src-media-fg:#6442C9;
+}

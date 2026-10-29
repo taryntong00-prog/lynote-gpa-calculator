@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lynote GPA Module</title>
+<script src="vendor/react.production.min.js"></script>
+<script src="vendor/react-dom.production.min.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="styles.css"><script src="_ds_bundle.js"></script><style>body{margin:0;background:#fff;font-family:var(--font-body);color:var(--fg-1);-webkit-font-smoothing:antialiased}a{color:var(--brand-primary)}a:hover{color:var(--brand-primary-hover)}select option:disabled{color:#C6C9CD}</style></helmet>
+<div style="min-height:100vh;background:#fff;font-family:var(--font-body);color:var(--fg-1);padding-top:16px;">
+<div style="height:60px;margin:0 auto;max-width:1200px;width:calc(100% - 48px);background:repeating-linear-gradient(45deg,#F2F1FB,#F2F1FB 8px,#FAFAFD 8px,#FAFAFD 16px);border:1px dashed var(--border);border-radius:12px;color:var(--fg-3);font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;box-sizing:border-box;">Site header · 占位（Logo / 导航 / 登录），不在本次设计范围</div>
+<div style="padding:0 24px;">
+<div style="max-width:780px;margin:40px auto 0;height:160px;background:repeating-linear-gradient(45deg,#F2F1FB,#F2F1FB 8px,#FAFAFD 8px,#FAFAFD 16px);border:1px dashed var(--border);border-radius:12px;color:var(--fg-3);font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;box-sizing:border-box;">Hero · 占位（H1 标题 + 副标题），文案以 SEO 定稿为准</div>
+</div>
+<section style="max-width:960px;margin:40px auto 0;padding:0 24px;box-sizing:border-box;">
+<div style="background:#fff;border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 20px rgba(0,0,0,.10);display:flex;flex-direction:column;overflow:hidden;">
+<div style="min-width:0;border-bottom:1px solid var(--border);padding:18px 24px 24px;box-sizing:border-box;display:flex;flex-direction:column;gap:14px;">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+<x-import component-from-global-scope="LynoteDesignSystem_5037c1.SegmentedTabs" tabs="{{ modeTabs }}" value="{{ mode }}" on-change="{{ setMode }}" hint-size="220px,38px"></x-import>
+<sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ true }}">
+<span onClick="{{ trySample }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px 7px 11px;border-radius:9px;background:rgba(134,94,255,.06);color:var(--brand-primary);font-size:13.5px;font-weight:700;cursor:pointer;" style-hover="background:rgba(134,94,255,.18);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="bulb" size="16" hint-size="16px,16px"></x-import>Try sample</span>
+</sc-if>
+<sc-if value="{{ notEmpty }}" hint-placeholder-val="{{ false }}">
+<span onClick="{{ clearAll }}" style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;color:var(--fg-2);font-size:13.5px;font-weight:700;cursor:pointer;" style-hover="background:var(--gray-100);color:var(--fg-1);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="delete" size="16" hint-size="16px,16px"></x-import>Clear</span>
+</sc-if>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;">
+<div style="display:grid;grid-template-columns:{{ cols }};gap:8px;font-size:12px;font-weight:600;color:var(--fg-3);padding:0 2px;">
+<span>Course (optional)</span><span>Grade</span><span>Credits</span>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}"><span>Level</span></sc-if>
+<span></span>
+</div>
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:8px;border-top:{{ g.bt }};padding-top:{{ g.pt }};margin-top:{{ g.mt }};">
+<sc-if value="{{ g.showHead }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:32px;">
+<div style="display:flex;align-items:center;gap:4px;min-width:0;flex:1;">
+<sc-if value="{{ g.editing }}" hint-placeholder-val="{{ false }}"><input value="{{ g.name }}" onChange="{{ g.onName }}" onKeyDown="{{ g.onKey }}" onBlur="{{ g.onSave }}" ref="{{ g.inputRef }}" maxlength="30" placeholder="Name this year (e.g. 10th grade)" style="height:32px;flex:1;max-width:320px;min-width:0;box-sizing:border-box;border:1px solid var(--brand-primary);border-radius:8px;padding:0 10px;font-size:14.5px;font-weight:700;font-family:var(--font-body);color:var(--fg-1);background:#fff;outline:none;box-shadow:0 0 0 3px rgba(134,94,255,.12);"></sc-if>
+<sc-if value="{{ g.notEditing }}" hint-placeholder-val="{{ true }}"><span onClick="{{ g.onEdit }}" onMouseEnter="{{ g.hOn }}" onMouseLeave="{{ g.hOff }}" style="display:inline-flex;align-items:center;gap:6px;padding:4px 8px;margin-left:-8px;border-radius:8px;cursor:text;min-width:0;" style-hover="background:var(--gray-100);"><span style="font-size:14.5px;font-weight:700;color:{{ g.nameColor }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ g.label }}</span><span title="Rename" style="display:flex;color:var(--fg-3);flex:none;opacity:{{ g.penOp }};transition:opacity .12s;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="pencil" size="16" hint-size="16px,16px"></x-import></span></span></sc-if>
+</div>
+<div style="display:flex;align-items:center;gap:10px;">
+<sc-if value="{{ g.resText }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:baseline;gap:6px;"><span style="font-size:11.5px;font-weight:600;color:var(--fg-3);">Unweighted / Weighted</span><span style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-size:14px;font-weight:700;color:{{ g.resColor }};">{{ g.resText }}</span></span></sc-if>
+<div style="position:relative;">
+<span onClick="{{ g.toggleMenu }}" title="Year options" style="width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:var(--fg-3);cursor:pointer;font-size:18px;font-weight:700;line-height:1;letter-spacing:1px;" style-hover="background:var(--gray-100);color:var(--fg-1);">⋯</span>
+<sc-if value="{{ g.menuOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:0;top:calc(100% + 4px);z-index:20;min-width:160px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 16px 40px rgba(28,31,35,.12);padding:4px;"><div onClick="{{ g.onDelete }}" style="display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:7px;font-size:13.5px;font-weight:600;color:{{ g.delYearColor }};cursor:{{ g.delYearCursor }};" style-hover="background:var(--gray-50);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="delete" size="16" hint-size="16px,16px"></x-import>Delete year</div></div></sc-if>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-for list="{{ g.rows }}" as="r" hint-placeholder-count="4">
+<div ref="{{ r.ref }}" style="border-radius:10px;background:{{ r.ringBg }};box-shadow:0 0 0 4px {{ r.ringBg }};">
+<div style="display:grid;grid-template-columns:{{ cols }};gap:8px;align-items:center;">
+<input value="{{ r.name }}" onChange="{{ r.onName }}" placeholder="{{ r.ph }}" style="height:40px;min-width:0;width:100%;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:14px;font-family:var(--font-body);color:var(--fg-1);background:#fff;outline:none;" style-focus="border-color:var(--brand-primary);">
+<div style="position:relative;min-width:0;">
+<select value="{{ r.grade }}" onChange="{{ r.onGrade }}" style="height:40px;width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;border:1px solid {{ r.gradeBorder }};border-radius:8px;padding:0 26px 0 12px;font-size:14px;font-family:var(--font-body);color:{{ r.gradeColor }};background:#fff;outline:none;cursor:pointer;" style-focus="border-color:var(--brand-primary);">
+<option value="">Grade</option>
+<sc-for list="{{ gradeOpts }}" as="o" hint-placeholder-count="0"><option value="{{ o.v }}" disabled="{{ o.dis }}">{{ o.label }}</option></sc-for>
+</select>
+<span style="position:absolute;right:8px;top:12px;pointer-events:none;color:var(--fg-3);display:flex;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="16" hint-size="16px,16px"></x-import></span>
+</div>
+<div style="position:relative;min-width:0;">
+<select value="{{ r.credits }}" onChange="{{ r.onCredits }}" style="height:40px;width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;border:1px solid {{ r.crBorder }};border-radius:8px;padding:0 26px 0 12px;font-size:14px;font-family:var(--font-body);color:{{ r.crColor }};background:#fff;outline:none;cursor:pointer;" style-focus="border-color:var(--brand-primary);">
+<option value="">—</option>
+<sc-for list="{{ crOpts }}" as="c" hint-placeholder-count="0"><option value="{{ c }}">{{ c }}</option></sc-for>
+</select>
+<span style="position:absolute;right:8px;top:12px;pointer-events:none;color:var(--fg-3);display:flex;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="16" hint-size="16px,16px"></x-import></span>
+</div>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}">
+<div style="position:relative;min-width:0;">
+<select value="{{ r.level }}" onChange="{{ r.onLevel }}" style="height:40px;width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;border:1px solid var(--border);border-radius:8px;padding:0 26px 0 12px;font-size:14px;font-family:var(--font-body);color:var(--fg-1);background:#fff;outline:none;cursor:pointer;" style-focus="border-color:var(--brand-primary);">
+<sc-for list="{{ levelOpts }}" as="l" hint-placeholder-count="0"><option value="{{ l }}">{{ l }}</option></sc-for>
+</select>
+<span style="position:absolute;right:8px;top:12px;pointer-events:none;color:var(--fg-3);display:flex;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="16" hint-size="16px,16px"></x-import></span>
+</div>
+</sc-if>
+<span onClick="{{ r.onDel }}" title="Remove class" style="width:28px;height:28px;border-radius:8px;display:grid;place-items:center;color:{{ r.delColor }};cursor:{{ r.delCursor }};" style-hover="background:var(--gray-100);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="close" size="16" hint-size="16px,16px"></x-import></span>
+</div>
+<sc-if value="{{ r.hint }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:5px;padding:6px 2px 0;font-size:12.5px;color:var(--warning-text);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="exclamation-circle" size="14" hint-size="14px,14px"></x-import>{{ r.hint }}</div></sc-if>
+</div>
+</sc-for>
+<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding-top:4px;">
+<span onClick="{{ g.addRow }}" style="display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:{{ g.addColor }};cursor:{{ g.addCursor }};"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="plus" size="16" hint-size="16px,16px"></x-import>Add class</span>
+<sc-if value="{{ g.atMax }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--fg-3);">{{ g.maxText }}</span></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start;">
+<div style="display:flex;gap:10px 24px;flex-wrap:wrap;align-items:center;width:100%;">
+<sc-if value="{{ showAddYear }}" hint-placeholder-val="{{ false }}"><span onClick="{{ addYear }}" style="order:2;margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:{{ addYearColor }};cursor:{{ addYearCursor }};"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="plus" size="16" hint-size="16px,16px"></x-import>Add year</span></sc-if>
+<sc-if value="{{ showPrevLink }}" hint-placeholder-val="{{ true }}">
+<span onClick="{{ openPrev }}" style="display:inline-flex;align-items:center;gap:6px;font-size:13.5px;font-weight:700;color:var(--brand-primary);cursor:pointer;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="plus" size="16" hint-size="16px,16px"></x-import>Previous GPA</span>
+</sc-if>
+</div>
+<sc-if value="{{ showPrevFields }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:6px;width:100%;">
+<div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--fg-3);flex:1 1 140px;">Previous GPA<input ref="{{ gpaRef }}" value="{{ prevGpa }}" onChange="{{ onPrevGpa }}" placeholder="e.g. 3.40" inputmode="decimal" style="height:40px;box-sizing:border-box;border:1px solid {{ gpaBorder }};border-radius:8px;padding:0 12px;font-size:14px;font-family:var(--font-body);color:var(--fg-1);outline:none;" style-focus="border-color:var(--brand-primary);"></label>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--fg-3);flex:0 1 140px;">It's<span style="position:relative;display:block;"><select value="{{ prevType }}" onChange="{{ onPrevType }}" style="height:40px;width:100%;box-sizing:border-box;appearance:none;-webkit-appearance:none;border:1px solid var(--border);border-radius:8px;padding:0 26px 0 12px;font-size:14px;font-family:var(--font-body);color:var(--fg-1);background:#fff;outline:none;cursor:pointer;" style-focus="border-color:var(--brand-primary);"><option value="u">unweighted</option><option value="w">weighted</option></select><span style="position:absolute;right:8px;top:12px;pointer-events:none;color:var(--fg-3);display:flex;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="16" hint-size="16px,16px"></x-import></span></span></label></sc-if>
+<label style="display:flex;flex-direction:column;gap:4px;font-size:12px;font-weight:600;color:var(--fg-3);flex:1 1 140px;">Credits earned<input value="{{ prevCr }}" onChange="{{ onPrevCr }}" placeholder="e.g. 30" inputmode="decimal" style="height:40px;box-sizing:border-box;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:14px;font-family:var(--font-body);color:var(--fg-1);outline:none;" style-focus="border-color:var(--brand-primary);"></label>
+<span onClick="{{ closePrev }}" title="Remove previous GPA" style="width:28px;height:40px;display:grid;place-items:center;color:var(--fg-3);cursor:pointer;border-radius:8px;" style-hover="background:var(--gray-100);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="close" size="16" hint-size="16px,16px"></x-import></span>
+</div>
+<sc-if value="{{ prevErr }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:#D73415;">{{ prevErr }}</span></sc-if>
+<sc-if value="{{ prevHint }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--fg-3);">{{ prevHint }}</span></sc-if>
+</div>
+</sc-if>
+</div>
+<div style="margin-top:auto;padding-top:6px;">
+<div style="position:relative;display:flex;align-items:center;justify-content:flex-end;gap:6px;font-size:13px;color:var(--fg-2);margin-bottom:10px;"><span>{{ scaleName }}</span><span style="color:var(--fg-3);">·</span><span onClick="{{ toggleScale }}" style="display:inline-flex;align-items:center;gap:2px;color:var(--brand-primary);font-weight:700;cursor:pointer;" style-hover="color:var(--brand-primary-hover);">Change<span style="display:flex;transform:{{ scaleCaret }};transition:transform .2s;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="14" hint-size="14px,14px"></x-import></span></span>
+<sc-if value="{{ scaleOpen }}" hint-placeholder-val="{{ false }}">
+<div style="position:absolute;right:0;bottom:calc(100% + 6px);z-index:20;min-width:240px;background:#fff;border:1px solid var(--border);border-radius:10px;box-shadow:0 16px 40px rgba(28,31,35,.12);padding:4px;display:flex;flex-direction:column;">
+<sc-for list="{{ scaleOpts }}" as="o" hint-placeholder-count="3">
+<div onClick="{{ o.pick }}" style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 10px;border-radius:7px;font-size:13.5px;color:{{ o.color }};font-weight:{{ o.weight }};cursor:pointer;" style-hover="background:var(--gray-50);">{{ o.label }}<span style="display:flex;color:var(--brand-primary);opacity:{{ o.check }};"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="check" size="16" hint-size="16px,16px"></x-import></span></div>
+</sc-for>
+</div>
+</sc-if>
+</div>
+<x-import component-from-global-scope="LynoteDesignSystem_5037c1.Button" variant="gradient" size="lg" block="{{ true }}" disabled="{{ calcDisabled }}" on-click="{{ calculate }}" hint-size="100%,52px">{{ calcLabel }}</x-import>
+</div>
+</div>
+<div style="min-width:0;background:var(--gray-50);padding:24px;box-sizing:border-box;display:flex;flex-direction:column;">
+<sc-if value="{{ isCollege }}" hint-placeholder-val="{{ true }}">
+<div style="margin-bottom:18px;">
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+<sc-if value="{{ fresh }}" hint-placeholder-val="{{ false }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;background:linear-gradient(135deg,#A57CFE 0%,#6084FB 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;">{{ gpaText }}</div></sc-if>
+<sc-if value="{{ notFresh }}" hint-placeholder-val="{{ true }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;color:var(--gray-300);">{{ gpaText }}</div></sc-if>
+<sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;font-weight:700;color:{{ letterColor }};white-space:nowrap;">{{ letterText }}</span></sc-if>
+</div>
+<div style="margin-top:4px;font-size:13px;font-weight:700;color:var(--fg-2);">{{ bigLabel }}</div>
+<sc-if value="{{ hasCum }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:baseline;gap:8px;margin-top:10px;font-size:13.5px;color:var(--fg-2);">Semester GPA<span style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:700;font-size:15px;color:{{ secColor }};">{{ semText }}</span></div></sc-if>
+<sc-if value="{{ prevExcluded }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:10px;font-size:13px;line-height:1.5;color:var(--fg-2);"><span>Your previous GPA isn't included. Fix it to see your cumulative GPA.</span><span onClick="{{ fixPrev }}" style="color:var(--brand-primary);font-weight:700;cursor:pointer;" style-hover="color:var(--brand-primary-hover);text-decoration:underline;">Fix previous GPA</span></div></sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:28px;margin-bottom:18px;flex-wrap:wrap;">
+<div>
+<div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+<sc-if value="{{ fresh }}" hint-placeholder-val="{{ false }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;background:linear-gradient(135deg,#A57CFE 0%,#6084FB 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;">{{ gpaText }}</div></sc-if>
+<sc-if value="{{ notFresh }}" hint-placeholder-val="{{ true }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;color:var(--gray-300);">{{ gpaText }}</div></sc-if>
+<sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;font-weight:700;color:{{ letterColor }};white-space:nowrap;">{{ letterText }}</span></sc-if>
+</div>
+<div style="margin-top:4px;font-size:13px;font-weight:700;color:var(--fg-2);">Unweighted</div>
+<sc-if value="{{ uSub }}" hint-placeholder-val="{{ false }}"><div style="margin-top:2px;font-size:12px;font-weight:600;color:var(--fg-3);">{{ uSub }}</div></sc-if>
+</div>
+<div>
+<sc-if value="{{ fresh }}" hint-placeholder-val="{{ false }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;background:linear-gradient(135deg,#A57CFE 0%,#6084FB 100%);-webkit-background-clip:text;background-clip:text;color:transparent;display:inline-block;">{{ wText }}</div></sc-if>
+<sc-if value="{{ notFresh }}" hint-placeholder-val="{{ true }}"><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:800;font-size:52px;line-height:1;color:var(--gray-300);">{{ wText }}</div></sc-if>
+<div style="margin-top:4px;font-size:13px;font-weight:700;color:var(--fg-2);">Weighted</div>
+<sc-if value="{{ wSub }}" hint-placeholder-val="{{ false }}"><div style="margin-top:2px;font-size:12px;font-weight:600;color:var(--fg-3);">{{ wSub }}</div></sc-if>
+</div>
+</div>
+<sc-if value="{{ hsSpan }}" hint-placeholder-val="{{ false }}"><div style="margin:-8px 0 18px;font-size:13px;color:var(--fg-2);font-weight:600;">{{ hsSpan }}</div></sc-if>
+<sc-if value="{{ hsPrevExcluded }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:-8px 0 18px;font-size:13px;line-height:1.5;color:var(--fg-2);"><span>Your previous GPA isn't included. Fix it to see your cumulative GPA.</span><span onClick="{{ fixPrev }}" style="color:var(--brand-primary);font-weight:700;cursor:pointer;" style-hover="color:var(--brand-primary-hover);text-decoration:underline;">Fix previous GPA</span></div></sc-if>
+</sc-if>
+<sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+<div style="margin:-2px 0 20px;opacity:{{ scaleOpacity }};">
+<sc-if value="{{ isCollege }}" hint-placeholder-val="{{ true }}">
+<div style="position:relative;height:22px;font-size:11px;font-weight:600;color:var(--fg-2);"><span style="position:absolute;left:{{ deanLeft }};bottom:4px;transform:translateX(-50%);white-space:nowrap;display:flex;align-items:center;gap:4px;">Dean's List 3.5<span onMouseEnter="{{ deanOn }}" onMouseLeave="{{ deanOff }}" style="position:relative;display:flex;color:var(--fg-3);cursor:help;" style-hover="color:var(--brand-primary);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="info-circle" size="14" hint-size="14px,14px"></x-import><sc-if value="{{ deanTip }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-8px;bottom:calc(100% + 8px);z-index:10;width:max-content;max-width:260px;white-space:normal;background:var(--gray-900);color:#fff;font-size:12px;font-weight:600;line-height:17px;padding:8px 10px;border-radius:8px;box-shadow:0 16px 40px rgba(28,31,35,.12);">{{ deanText }}</span></sc-if></span></span></div>
+</sc-if>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}"><div style="height:10px;"></div></sc-if>
+<div style="position:relative;height:10px;">
+<div style="display:flex;height:10px;border-radius:9999px;overflow:hidden;"><div style="width:{{ seg1 }};background:#EEE8FF;"></div><div style="width:{{ seg2 }};background:#C9B8FF;"></div><div style="width:{{ seg3 }};background:#A57CFE;"></div><div style="width:{{ seg4 }};background:#6442C9;"></div></div>
+<sc-if value="{{ isCollege }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:{{ deanLeft }};top:-6px;bottom:-6px;border-left:1.5px dashed var(--fg-2);"></div></sc-if>
+<div style="position:absolute;top:50%;left:{{ dotLeft }};width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#fff;border:4px solid #865EFF;box-sizing:border-box;box-shadow:0 2px 6px rgba(100,66,201,.35);"></div>
+</div>
+<div style="position:relative;height:14px;margin-top:8px;font-size:11px;color:var(--fg-3);font-variant-numeric:tabular-nums;"><span style="position:absolute;left:0;">0.0</span><span style="position:absolute;left:{{ t2 }};transform:translateX(-50%);">2.0</span><span style="position:absolute;left:{{ t3 }};transform:translateX(-50%);">3.0</span><span style="position:absolute;left:{{ t37 }};transform:translateX(-50%);">3.7</span><span style="position:absolute;right:0;">{{ maxText }}</span></div>
+</div>
+</sc-if>
+<sc-if value="{{ stale }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:center;gap:8px;margin:-4px 0 18px;padding:8px 12px;border-radius:8px;background:var(--warning-100);border:1px solid var(--warning-300);color:var(--warning-text);font-size:13px;font-weight:600;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="info-circle" size="16" hint-size="16px,16px"></x-import>Inputs changed — click Calculate to update.</div>
+</sc-if>
+<div style="display:flex;gap:28px;margin-bottom:18px;">
+<div><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;color:{{ secColor }};">{{ crText }}</div><div style="margin-top:2px;font-size:11px;font-weight:600;color:var(--fg-3);">Credits</div><sc-if value="{{ crSub }}" hint-placeholder-val="{{ false }}"><div style="margin-top:2px;font-size:11px;color:var(--fg-3);font-variant-numeric:tabular-nums;">{{ crSub }}</div></sc-if></div>
+<div><div style="font-family:var(--font-number);font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;color:{{ secColor }};">{{ clText }}</div><div style="margin-top:2px;font-size:11px;font-weight:600;color:var(--fg-3);">{{ classesLabel }}</div></div>
+</div>
+<sc-if value="{{ isEmptyResult }}" hint-placeholder-val="{{ true }}"><div style="font-size:13.5px;color:var(--fg-2);line-height:1.5;">Add your classes and click Calculate.</div></sc-if>
+<sc-if value="{{ noGraded }}" hint-placeholder-val="{{ false }}"><div style="font-size:13.5px;color:var(--fg-2);line-height:1.5;">No graded classes to calculate. P, NP, W and I don't count toward GPA.</div></sc-if>
+<sc-if value="{{ hasResult }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ showContrib }}" hint-placeholder-val="{{ true }}">
+<div style="height:1px;background:var(--border);"></div>
+<div style="padding:16px 0;opacity:{{ scaleOpacity }};">
+<div style="font-size:13.5px;color:var(--fg-2);margin-bottom:10px;">Class contributions</div>
+<div style="display:flex;gap:3px;">
+<sc-for list="{{ contrib }}" as="c" hint-placeholder-count="4">
+<div style="flex:{{ c.flex }};min-width:0;display:flex;flex-direction:column;gap:6px;">
+<div style="height:32px;border-radius:6px;background:{{ c.bg }};color:{{ c.fg }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">{{ c.label }}</div>
+<div style="font-size:11.5px;line-height:1.35;color:var(--fg-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ c.name }}">{{ c.name }}</div>
+<div style="font-size:11px;color:var(--fg-3);margin-top:-5px;font-variant-numeric:tabular-nums;">{{ c.cr }}</div>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<div style="height:1px;background:var(--border);"></div>
+<div onClick="{{ toggleDetail }}" style="display:flex;align-items:center;justify-content:space-between;font-size:13.5px;color:var(--fg-2);padding:14px 0;cursor:pointer;" style-hover="color:var(--fg-1);">How it's calculated<span style="display:flex;transform:{{ caretRot }};transition:transform .2s;color:var(--fg-3);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="caret-down" size="16" hint-size="16px,16px"></x-import></span></div>
+<sc-if value="{{ showDetail }}" hint-placeholder-val="{{ false }}">
+<div style="background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:12.5px;opacity:{{ tableOpacity }};">
+<div style="display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:6px;padding:8px 12px;background:var(--gray-100);color:var(--fg-3);font-weight:600;"><span>Course</span><span>Grade</span><span>{{ ptsHead }}</span><span>Credits</span><span style="white-space:nowrap;">{{ qpHead }}</span></div>
+<sc-for list="{{ detailRows }}" as="d" hint-placeholder-count="3">
+<div style="display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:6px;padding:8px 12px;border-top:1px solid var(--border);color:{{ d.color }};font-weight:{{ d.weight }};background:{{ d.bg }};font-variant-numeric:tabular-nums;"><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ d.name }}</span><span>{{ d.grade }}</span><span>{{ d.pts }}</span><span>{{ d.cr }}</span><span>{{ d.qp }}</span></div>
+</sc-for>
+<div style="display:grid;grid-template-columns:minmax(0,2fr) repeat(4,minmax(0,1fr));gap:6px;padding:8px 12px;border-top:1px solid var(--border);font-weight:700;color:var(--fg-1);font-variant-numeric:tabular-nums;"><span>{{ totLabel }}</span><span></span><span>{{ totPts }}</span><span>{{ totCr }}</span><span>{{ totQp }}</span></div>
+</div>
+<div style="font-size:12px;color:var(--fg-3);margin-top:8px;line-height:1.5;">{{ formulaText }}</div>
+</sc-if>
+</sc-if>
+<sc-if value="{{ skippedText }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px;"><span onClick="{{ goIncomplete }}" style="font-size:12.5px;color:var(--brand-primary);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:2px;" style-hover="color:var(--brand-primary-hover);">{{ skippedText }}</span></div></sc-if>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:20px;">
+<span onMouseEnter="{{ expOn }}" onMouseLeave="{{ expOff }}" style="position:relative;display:inline-flex;gap:10px;flex-wrap:wrap;">
+<span style="display:inline-flex;gap:10px;flex-wrap:wrap;pointer-events:{{ expPE }};">
+<x-import component-from-global-scope="LynoteDesignSystem_5037c1.Button" variant="secondary" size="md" disabled="{{ expDisabled }}" icon-left="{{ icoCsv }}" on-click="{{ downloadCsv }}" hint-size="150px,40px">Download CSV</x-import>
+<x-import component-from-global-scope="LynoteDesignSystem_5037c1.Button" variant="secondary" size="md" disabled="{{ expDisabled }}" icon-left="{{ icoPrint }}" on-click="{{ printPdf }}" hint-size="130px,40px">Print / PDF</x-import>
+</span>
+<sc-if value="{{ expTip }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:0;bottom:calc(100% + 8px);z-index:10;white-space:nowrap;background:var(--gray-900);color:#fff;font-size:12px;font-weight:600;padding:7px 10px;border-radius:8px;box-shadow:0 16px 40px rgba(28,31,35,.12);">Calculate to export your latest results.</span></sc-if>
+</span>
+</div>
+<div style="margin-top:auto;padding-top:20px;display:flex;flex-direction:column;gap:6px;font-size:12px;line-height:1.5;color:var(--fg-3);">
+<div style="display:flex;gap:6px;align-items:flex-start;"><span style="display:flex;flex:none;margin-top:1px;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="info-circle" size="14" hint-size="14px,14px"></x-import></span>{{ scaleNote }}</div>
+<sc-if value="{{ isHs }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:6px;align-items:flex-start;"><span style="display:flex;flex:none;margin-top:1px;"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="info-circle" size="14" hint-size="14px,14px"></x-import></span>Honors adds 0.5 and AP / IB adds 1.0. F grades get no bonus.</div></sc-if>
+</div>
+</div>
+</div>
+</section>
+<section style="max-width:960px;margin:28px auto 0;padding:0 24px;box-sizing:border-box;display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+<a href="/ai-detector" style="flex:1;min-width:260px;display:flex;align-items:center;gap:14px;padding:18px 20px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;transition:.18s;box-shadow:0 1px 2px rgba(28,31,35,.05);text-decoration:none;" style-hover="box-shadow:0 8px 20px rgba(0,0,0,.10);transform:translateY(-2px);border-color:#5785FA;">
+<div style="flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(87,133,250,.10);"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20class%3D%22icon%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22%235785FA%22%20fill-rule%3D%22evenodd%22%20stroke%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3.999%2C22.333L13.333%2C22.333L13.333%2C22.333Q13.431%2C22.333%2C13.528%2C22.314Q13.624%2C22.295%2C13.715%2C22.257Q13.806%2C22.219%2C13.888%2C22.165Q13.97%2C22.11%2C14.04%2C22.04Q14.109%2C21.971%2C14.164%2C21.889Q14.219%2C21.807%2C14.256%2C21.716Q14.294%2C21.625%2C14.313%2C21.528Q14.332%2C21.432%2C14.332%2C21.333Q14.332%2C21.235%2C14.313%2C21.138Q14.294%2C21.042%2C14.256%2C20.951Q14.219%2C20.86%2C14.164%2C20.778Q14.109%2C20.696%2C14.04%2C20.626Q13.97%2C20.557%2C13.888%2C20.502Q13.806%2C20.447%2C13.715%2C20.41Q13.624%2C20.372%2C13.528%2C20.353Q13.431%2C20.333%2C13.333%2C20.333L13.333%2C20.333L3.999%2C20.333Q3.666%2C20.333%2C3.666%2C20L3.666%2C4Q3.666%2C3.667%2C3.999%2C3.667L19.999%2C3.667Q20.333%2C3.667%2C20.333%2C4L20.333%2C12.667L20.333%2C12.667Q20.333%2C12.765%2C20.352%2C12.862Q20.371%2C12.958%2C20.409%2C13.049Q20.447%2C13.14%2C20.501%2C13.222Q20.556%2C13.304%2C20.626%2C13.374Q20.695%2C13.443%2C20.777%2C13.498Q20.859%2C13.553%2C20.95%2C13.59Q21.041%2C13.628%2C21.138%2C13.647Q21.234%2C13.666%2C21.333%2C13.666Q21.431%2C13.666%2C21.528%2C13.647Q21.624%2C13.628%2C21.715%2C13.59Q21.806%2C13.553%2C21.888%2C13.498Q21.97%2C13.443%2C22.04%2C13.374Q22.109%2C13.304%2C22.164%2C13.222Q22.219%2C13.14%2C22.256%2C13.049Q22.294%2C12.958%2C22.313%2C12.862Q22.332%2C12.765%2C22.332%2C12.667L22.333%2C12.667L22.333%2C4Q22.333%2C1.667%2C19.999%2C1.667L3.999%2C1.667Q1.666%2C1.667%2C1.666%2C4L1.666%2C20Q1.666%2C22.333%2C3.999%2C22.333Z%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%235785FA%22%20fill-opacity%3D%221%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M12.004%2C7.133Q9.988%2C7.133%2C8.563%2C8.559Q7.137%2C9.984%2C7.137%2C12Q7.137%2C14.016%2C8.563%2C15.441Q9.988%2C16.867%2C12.004%2C16.867Q14.02%2C16.867%2C15.445%2C15.441Q16.871%2C14.016%2C16.871%2C12Q16.871%2C9.984%2C15.445%2C8.559Q14.02%2C7.133%2C12.004%2C7.133ZM8.871%2C12Q8.871%2C10.702%2C9.788%2C9.784Q10.706%2C8.867%2C12.004%2C8.867Q13.302%2C8.867%2C14.22%2C9.784Q15.137%2C10.702%2C15.137%2C12Q15.137%2C13.298%2C14.22%2C14.215Q13.302%2C15.133%2C12.004%2C15.133Q10.706%2C15.133%2C9.788%2C14.215Q8.871%2C13.298%2C8.871%2C12Z%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%235785FA%22%20fill-opacity%3D%221%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M14.627%2C16.04Q14.486%2C15.9%2C14.41%2C15.716Q14.334%2C15.532%2C14.334%2C15.333Q14.334%2C15.235%2C14.353%2C15.138Q14.373%2C15.042%2C14.41%2C14.951Q14.448%2C14.86%2C14.503%2C14.778Q14.557%2C14.696%2C14.627%2C14.626Q14.697%2C14.557%2C14.779%2C14.502Q14.86%2C14.447%2C14.951%2C14.41Q15.042%2C14.372%2C15.139%2C14.353Q15.236%2C14.334%2C15.334%2C14.334Q15.533%2C14.334%2C15.717%2C14.41Q15.9%2C14.486%2C16.041%2C14.626L16.041%2C14.626L17.374%2C15.96L17.374%2C15.96Q17.515%2C16.1%2C17.591%2C16.284Q17.667%2C16.468%2C17.667%2C16.667Q17.667%2C16.765%2C17.648%2C16.862Q17.629%2C16.958%2C17.591%2C17.049Q17.553%2C17.14%2C17.499%2C17.222Q17.444%2C17.304%2C17.374%2C17.374Q17.305%2C17.443%2C17.223%2C17.498Q17.141%2C17.553%2C17.05%2C17.59Q16.959%2C17.628%2C16.862%2C17.647Q16.766%2C17.667%2C16.667%2C17.667Q16.468%2C17.667%2C16.285%2C17.59Q16.101%2C17.514%2C15.96%2C17.374L15.96%2C17.374L14.627%2C16.041L14.627%2C16.04Z%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%235785FA%22%20fill-opacity%3D%221%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M20.009%2C18.016C20.081%2C17.864%2C20.108%2C17.806%2C20.136%2C17.776L20.136%2C17.776C20.242%2C17.662%2C20.422%2C17.662%2C20.528%2C17.776C20.556%2C17.806%2C20.583%2C17.864%2C20.655%2C18.016L21.238%2C19.249C21.254%2C19.284%2C21.26%2C19.295%2C21.266%2C19.306L21.266%2C19.306C21.289%2C19.344%2C21.321%2C19.377%2C21.36%2C19.399C21.37%2C19.406%2C21.382%2C19.411%2C21.416%2C19.427L22.649%2C20.01C22.801%2C20.082%2C22.859%2C20.11%2C22.889%2C20.138L22.889%2C20.138C23.003%2C20.243%2C23.003%2C20.424%2C22.889%2C20.529C22.859%2C20.557%2C22.801%2C20.584%2C22.649%2C20.656L21.416%2C21.239C21.382%2C21.255%2C21.37%2C21.261%2C21.36%2C21.267L21.36%2C21.267C21.321%2C21.29%2C21.289%2C21.322%2C21.266%2C21.361C21.26%2C21.371%2C21.254%2C21.383%2C21.238%2C21.417L20.655%2C22.65C20.583%2C22.802%2C20.556%2C22.86%2C20.528%2C22.891L20.528%2C22.891C20.422%2C23.005%2C20.242%2C23.005%2C20.136%2C22.891C20.108%2C22.86%2C20.081%2C22.802%2C20.009%2C22.65L19.426%2C21.417C19.41%2C21.383%2C19.404%2C21.371%2C19.398%2C21.361L19.398%2C21.361C19.375%2C21.322%2C19.343%2C21.29%2C19.305%2C21.267C19.294%2C21.261%2C19.282%2C21.255%2C19.248%2C21.239L18.015%2C20.656C17.863%2C20.584%2C17.805%2C20.557%2C17.775%2C20.529L17.775%2C20.529C17.661%2C20.424%2C17.661%2C20.243%2C17.775%2C20.138C17.805%2C20.11%2C17.863%2C20.082%2C18.015%2C20.01L19.248%2C19.427C19.282%2C19.411%2C19.294%2C19.406%2C19.305%2C19.399L19.305%2C19.399C19.343%2C19.377%2C19.375%2C19.344%2C19.398%2C19.306C19.404%2C19.295%2C19.41%2C19.284%2C19.426%2C19.249L20.009%2C18.016Z%22%20fill%3D%22%235785FA%22%20fill-opacity%3D%221%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E" width="20" height="20" alt=""></div>
+<div><b style="display:block;font-size:15px;color:var(--fg-1);font-weight:700;">AI Detector</b><span style="font-size:12.5px;color:var(--fg-2);">Scan any text to instantly identify AI content</span></div>
+<div style="margin-left:auto;flex:none;width:30px;height:30px;border-radius:50%;background:var(--gray-50);display:grid;place-items:center;color:var(--fg-3);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="right" size="14" hint-size="14px,14px"></x-import></div>
+</a>
+<a href="/ai-humanizer" style="flex:1;min-width:260px;display:flex;align-items:center;gap:14px;padding:18px 20px;border:1px solid var(--border);border-radius:12px;background:#fff;cursor:pointer;transition:.18s;box-shadow:0 1px 2px rgba(28,31,35,.05);text-decoration:none;" style-hover="box-shadow:0 8px 20px rgba(0,0,0,.10);transform:translateY(-2px);border-color:#865EFF;">
+<div style="flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:rgba(134,94,255,.10);"><img src="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20class%3D%22icon%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22%23865EFF%22%20fill-rule%3D%22evenodd%22%20stroke%3D%22none%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M11.823%2C11.229C11.751%2C11.298%2C11.751%2C11.417%2C11.823%2C11.486C11.843%2C11.505%2C11.885%2C11.525%2C11.963%2C11.562L12.816%2C11.965C12.831%2C11.973%2C12.839%2C11.976%2C12.846%2C11.981C12.872%2C11.996%2C12.893%2C12.017%2C12.908%2C12.043C12.913%2C12.05%2C12.916%2C12.058%2C12.923%2C12.073L13.327%2C12.926C13.364%2C13.004%2C13.384%2C13.046%2C13.403%2C13.066C13.472%2C13.138%2C13.591%2C13.138%2C13.66%2C13.066C13.678%2C13.046%2C13.699%2C13.004%2C13.735%2C12.926L14.139%2C12.073C14.146%2C12.058%2C14.15%2C12.05%2C14.154%2C12.043C14.169%2C12.017%2C14.191%2C11.996%2C14.216%2C11.981C14.224%2C11.976%2C14.231%2C11.973%2C14.247%2C11.965L15.1%2C11.562C15.177%2C11.525%2C15.219%2C11.505%2C15.239%2C11.486C15.311%2C11.417%2C15.311%2C11.298%2C15.239%2C11.229C15.219%2C11.211%2C15.177%2C11.19%2C15.1%2C11.154L14.247%2C10.75C14.231%2C10.743%2C14.224%2C10.739%2C14.216%2C10.735C14.191%2C10.72%2C14.169%2C10.698%2C14.154%2C10.672C14.15%2C10.665%2C14.146%2C10.658%2C14.139%2C10.642L13.735%2C9.789C13.699%2C9.711%2C13.678%2C9.67%2C13.66%2C9.65C13.591%2C9.577%2C13.472%2C9.577%2C13.403%2C9.65C13.384%2C9.67%2C13.364%2C9.711%2C13.327%2C9.789L12.923%2C10.642C12.916%2C10.658%2C12.913%2C10.665%2C12.908%2C10.672C12.893%2C10.698%2C12.872%2C10.72%2C12.846%2C10.735C12.839%2C10.739%2C12.831%2C10.743%2C12.816%2C10.75L11.963%2C11.154C11.885%2C11.19%2C11.843%2C11.211%2C11.823%2C11.229Z%22%20fill%3D%22%23865EFF%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8%2C13.111L10.222%2C13.111L10.222%2C13.109Q10.287%2C13.109%2C10.351%2C13.097Q10.416%2C13.084%2C10.476%2C13.059Q10.537%2C13.034%2C10.591%2C12.997Q10.646%2C12.961%2C10.692%2C12.915Q10.738%2C12.868%2C10.775%2C12.814Q10.811%2C12.759%2C10.836%2C12.699Q10.861%2C12.638%2C10.874%2C12.574Q10.887%2C12.51%2C10.887%2C12.445Q10.887%2C12.379%2C10.874%2C12.315Q10.861%2C12.251%2C10.836%2C12.19Q10.811%2C12.13%2C10.775%2C12.075Q10.738%2C12.021%2C10.692%2C11.974Q10.646%2C11.928%2C10.591%2C11.892Q10.537%2C11.855%2C10.476%2C11.83Q10.416%2C11.805%2C10.351%2C11.792Q10.287%2C11.78%2C10.222%2C11.78L10.222%2C11.778L4.444%2C11.778Q4.242%2C11.778%2C4.074%2C11.89L2.444%2C12.977L2.444%2C5.778Q2.444%2C4.581%2C3.29%2C3.735Q4.136%2C2.889%2C5.333%2C2.889L10.666%2C2.889Q11.863%2C2.889%2C12.709%2C3.735Q13.555%2C4.581%2C13.555%2C5.778L13.555%2C7.448L13.557%2C7.448Q13.557%2C7.514%2C13.57%2C7.578Q13.582%2C7.642%2C13.608%2C7.703Q13.633%2C7.763%2C13.669%2C7.818Q13.705%2C7.872%2C13.752%2C7.918Q13.798%2C7.965%2C13.852%2C8.001Q13.907%2C8.038%2C13.967%2C8.063Q14.028%2C8.088%2C14.092%2C8.1Q14.156%2C8.113%2C14.222%2C8.113Q14.287%2C8.113%2C14.351%2C8.1Q14.416%2C8.088%2C14.476%2C8.063Q14.537%2C8.038%2C14.591%2C8.001Q14.646%2C7.965%2C14.692%2C7.918Q14.738%2C7.872%2C14.775%2C7.818Q14.811%2C7.763%2C14.836%2C7.703Q14.861%2C7.642%2C14.874%2C7.578Q14.887%2C7.514%2C14.887%2C7.448L14.888%2C7.448L14.888%2C5.778Q14.888%2C4.029%2C13.652%2C2.792Q12.415%2C1.556%2C10.666%2C1.556L5.333%2C1.556Q3.584%2C1.556%2C2.347%2C2.792Q1.111%2C4.029%2C1.111%2C5.778L1.111%2C14.222Q1.111%2C14.424%2C1.223%2C14.592Q1.296%2C14.702%2C1.406%2C14.776Q1.517%2C14.85%2C1.647%2C14.876Q1.777%2C14.902%2C1.907%2C14.876Q2.037%2C14.851%2C2.147%2C14.777L4.646%2C13.111L8%2C13.111Z%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%23865EFF%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8.722%2C9.773L8.246%2C8.601L5.707%2C8.601L5.222%2C9.78C5.152%2C9.951%2C4.957%2C10.034%2C4.785%2C9.967C4.608%2C9.898%2C4.522%2C9.695%2C4.597%2C9.52L6.449%2C5.144C6.545%2C4.917%2C6.768%2C4.77%2C7.014%2C4.77C7.262%2C4.77%2C7.485%2C4.919%2C7.58%2C5.147L9.394%2C9.496C9.473%2C9.684%2C9.381%2C9.901%2C9.19%2C9.975C9.005%2C10.046%2C8.797%2C9.956%2C8.722%2C9.773M5.942%2C8L8.003%2C8L6.976%2C5.476L5.942%2C8ZM9.938%2C9.655L9.938%2C5.142C9.938%2C4.937%2C10.105%2C4.77%2C10.311%2C4.77C10.516%2C4.77%2C10.683%2C4.937%2C10.683%2C5.142L10.683%2C9.655C10.683%2C9.861%2C10.516%2C10.028%2C10.311%2C10.028C10.105%2C10.028%2C9.938%2C9.861%2C9.938%2C9.655%22%20fill%3D%22%23865EFF%22%3E%3C%2Fpath%3E%3Cpath%20d%3D%22M8.844%2C10.132Q9.047%2C10.22%2C9.254%2C10.141Q9.467%2C10.058%2C9.557%2C9.848Q9.646%2C9.638%2C9.558%2C9.427L7.744%2C5.079Q7.541%2C4.592%2C7.014%2C4.592Q6.49%2C4.592%2C6.285%2C5.075L4.433%2C9.45Q4.348%2C9.651%2C4.433%2C9.852Q4.517%2C10.053%2C4.72%2C10.133Q4.917%2C10.21%2C5.112%2C10.127Q5.306%2C10.043%2C5.387%2C9.848L5.826%2C8.778L8.126%2C8.778L8.558%2C9.839Q8.641%2C10.045%2C8.844%2C10.132ZM9.922%2C10.044Q10.083%2C10.205%2C10.311%2C10.205Q10.539%2C10.205%2C10.7%2C10.044Q10.861%2C9.883%2C10.861%2C9.655L10.861%2C5.142Q10.861%2C4.914%2C10.7%2C4.753Q10.539%2C4.592%2C10.311%2C4.592Q10.083%2C4.592%2C9.922%2C4.753Q9.761%2C4.914%2C9.761%2C5.142L9.761%2C9.655Q9.761%2C9.883%2C9.922%2C10.044ZM9.23%2C9.708Q9.199%2C9.781%2C9.126%2C9.809Q8.956%2C9.874%2C8.887%2C9.706L8.365%2C8.423L5.587%2C8.423L5.058%2C9.713Q4.997%2C9.859%2C4.85%2C9.802Q4.787%2C9.777%2C4.76%2C9.714Q4.734%2C9.651%2C4.76%2C9.589L6.613%2C5.213Q6.725%2C4.948%2C7.014%2C4.948Q7.304%2C4.948%2C7.416%2C5.216L9.23%2C9.564Q9.261%2C9.636%2C9.23%2C9.708ZM10.448%2C9.793Q10.391%2C9.85%2C10.311%2C9.85Q10.23%2C9.85%2C10.173%2C9.793Q10.116%2C9.736%2C10.116%2C9.655L10.116%2C5.142Q10.116%2C5.062%2C10.173%2C5.005Q10.23%2C4.948%2C10.311%2C4.948Q10.391%2C4.948%2C10.448%2C5.005Q10.505%2C5.062%2C10.505%2C5.142L10.505%2C9.655Q10.505%2C9.736%2C10.448%2C9.793ZM8.267%2C8.178L6.976%2C5.005L6.811%2C5.408L5.677%2C8.178L8.267%2C8.178ZM6.975%2C5.946L6.207%2C7.822L7.738%2C7.822L6.975%2C5.946Z%22%20fill-rule%3D%22evenodd%22%20fill%3D%22%23865EFF%22%3E%3C%2Fpath%3E%3C%2Fsvg%3E" width="20" height="20" alt=""></div>
+<div><b style="display:block;font-size:15px;color:var(--fg-1);font-weight:700;">AI Humanizer</b><span style="font-size:12.5px;color:var(--fg-2);">Rewrite AI text to read naturally</span></div>
+<div style="margin-left:auto;flex:none;width:30px;height:30px;border-radius:50%;background:var(--gray-50);display:grid;place-items:center;color:var(--fg-3);"><x-import component-from-global-scope="LynoteDesignSystem_5037c1.LyIcon" name="right" size="14" hint-size="14px,14px"></x-import></div>
+</a>
+</section>
+<div style="padding:0 24px;max-width:1200px;margin:0 auto;box-sizing:border-box;">
+<div style="height:320px;margin:72px 0;background:repeating-linear-gradient(45deg,#F2F1FB,#F2F1FB 8px,#FAFAFD 8px,#FAFAFD 16px);border:1px dashed var(--border);border-radius:12px;color:var(--fg-3);font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;">SEO 内容 · 占位（How it works / FAQ / 相关工具等），不在本次设计范围</div>
+<div style="height:90px;margin:0 0 40px;background:repeating-linear-gradient(45deg,#F2F1FB,#F2F1FB 8px,#FAFAFD 8px,#FAFAFD 16px);border:1px dashed var(--border);border-radius:12px;color:var(--fg-3);font-size:13px;display:flex;align-items:center;justify-content:center;text-align:center;">Site footer · 占位</div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;live&quot;,&quot;options&quot;:[&quot;live&quot;,&quot;empty&quot;,&quot;filled&quot;,&quot;college&quot;,&quot;hs&quot;,&quot;stale&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;状态预览&quot;}}">
+const GP={'A+':4,'A':4,'A-':3.7,'B+':3.3,'B':3,'B-':2.7,'C+':2.3,'C':2,'C-':1.7,'D+':1.3,'D':1,'D-':0.7,'F':0};
+const NOGPA=['P','NP','W','I'];
+const GRADE_OPTS=[...Object.keys(GP).map(v=>({v,label:v,dis:false})),{v:'__sep',label:'──────',dis:true},...NOGPA.map(v=>({v,label:v,dis:false}))];
+const CR={college:['1','2','3','4','5','6'],hs:['0.5','1']};
+const LEVELS=['Regular','Honors','AP','IB'];
+const BONUS={Regular:0,Honors:0.5,AP:1,IB:1};
+let _id=0;
+const row=(name='',grade='',credits='',level='Regular',year=9)=>({id:++_id,name,grade,credits,level,year});
+const blanks=()=>[row(),row(),row(),row()];
+const SAMPLE={
+  college:()=>[row('Calculus I','B+','4'),row('English Composition','A','3'),row('Intro to Psychology','A-','3'),row('Biology','B','4'),row('Biology Lab','A','1')],
+  hs:()=>[row('English 9','A','1','Regular',9),row('Algebra I','B+','1','Regular',9),row('Biology','A-','1','Honors',9),row('World History','B','1','Regular',9),row('Spanish I','A','1','Regular',9),row('PE','P','0.5','Regular',9),row('English 10','A-','1','Honors',10),row('Geometry','B','1','Regular',10),row('Chemistry','B+','1','Honors',10),row('AP World History','A-','1','AP',10),row('Spanish II','A','1','Regular',10)]
+};
+const SCALES={
+  std:{gp:GP,max:4,name:'Standard 4.0 scale',label:'4.0 plus/minus',note:'standard 4.0 scale'},
+  s433:{gp:{...GP,'A+':4.33},max:4.33,name:'4.33 scale',label:'4.33 (A+ = 4.33)',note:'4.33 scale (A+ = 4.33)'},
+  letters:{gp:{A:4,B:3,C:2,D:1,F:0},max:4,name:'Letters only scale',label:'Letters only (A–F)',note:'letters-only scale (A–F)'}
+};
+const SCALE_KEYS=['std','s433','letters'];
+const scOf=s=>SCALES[s.scale||'std'];
+const lettersOf=sc=>{const out=[];Object.keys(sc.gp).forEach(k=>{const v=sc.gp[k];if(!out.some(o=>o[1]===v))out.push([k,v]);});return out.map(o=>o[0]==='A+'&&o[1]===4?['A',4]:o).sort((a,b)=>b[1]-a[1]);};
+const gradeOptsOf=sc=>[...Object.keys(sc.gp).map(v=>({v,label:v,dis:false})),{v:'__sep',label:'──────',dis:true},...NOGPA.map(v=>({v,label:v,dis:false}))];
+const shade=p=>p>=4?['#6442C9','#fff']:p>=3.7?['#744FE6','#fff']:p>=3.3?['#865EFF','#fff']:p>=3?['#A57CFE','#fff']:p>=2.7?['#B79BFF','#1C1F23']:p>=2?['#C9B8FF','#1C1F23']:['#EEE8FF','#1C1F23'];
+const isDone=r=>!!r.grade&&(!!r.credits||NOGPA.includes(r.grade));
+const isInc=r=>(!!r.grade||!!r.credits)&&!isDone(r);
+const TAB_KEYS=['yearNames','editYear','prevType','years','yearMenu','rows','showPrev','prevGpa','prevCr','result','lastKey','stale','flagged','showDetail'];
+const freshTab=()=>({yearNames:{9:'9th grade'},editYear:null,prevType:'u',years:[9],yearMenu:null,rows:blanks(),showPrev:false,prevGpa:'',prevCr:'',result:null,lastKey:null,stale:false,flagged:[],showDetail:false});
+const ORD=['9th grade','10th grade','11th grade','12th grade'];
+const yName=(s,y)=>{const ys=s.years||[9];const n=((s.yearNames||{})[y]||'').trim();return n||('Year '+(ys.indexOf(y)+1));};
+const r2=x=>Math.round((x+1e-9)*100)/100;
+const f2=x=>r2(x).toFixed(2);
+const fq=x=>String(parseFloat(x.toFixed(2)));
+function prevStatus(s){
+  if(!s.showPrev) return {use:false};
+  const hsW=s.mode==='hs'&&s.prevType==='w';
+  const g=s.prevGpa.trim(), c=s.prevCr.trim();
+  let err='';
+  const mx=scOf(s).max+(hsW?1:0);
+  if(g && (!/^\d+(\.\d{1,2})?$/.test(g) || +g>mx)) err='Enter a GPA between 0 and '+mx.toFixed(2)+'.';
+  const cOk=c!=='' && /^\d+(\.(5|0+))?$/.test(c) && +c>0;
+  const gOk=g!=='' && !err;
+  const hint=!err && ((g&&!cOk)||(!g&&c)) ? 'Enter both to include your previous GPA.' : '';
+  return {use:gOk&&cOk, g:+g, c:+c, err, hint, type:s.mode==='hs'?(hsW?'w':'u'):''};
+}
+function compute(s){
+  const gp=scOf(s).gp;
+  const complete=s.rows.filter(isDone);
+  const skipped=s.rows.filter(isInc).length;
+  const counted=complete.filter(r=>!NOGPA.includes(r.grade));
+  const hs=s.mode==='hs';
+  let detail=complete.map(r=>{
+    const cr=+(r.credits||0), ex=NOGPA.includes(r.grade);
+    const p=ex?0:gp[r.grade], w=ex?0:p+(r.grade==='F'?0:BONUS[r.level]);
+    return {name:r.name.trim()||('Class '+(s.rows.indexOf(r)+1)),grade:r.grade+(hs&&r.level!=='Regular'?' · '+r.level:''),
+      pts:ex?'Not counted':(hs?fq(p)+' / '+fq(w):fq(p)),cr:r.credits?fq(cr):'—',qp:ex?'—':(hs?fq(p*cr)+' / '+fq(w*cr):fq(p*cr)),color:ex?'var(--fg-3)':'var(--fg-1)',weight:'400',bg:'transparent'};
+  });
+  const snapX={rows:s.rows.map(r=>({...r})),years:[...(s.years||[9])],scale:s.scale||'std',pv:prevStatus(s),mode:s.mode};
+  if(!counted.length) return {noGraded:true,skipped,detail,snapX};
+  let cr=0,qp=0,wqp=0;
+  let qN=0,wN=0,cN=0; const H=x=>Math.round(x*100),C2=x=>Math.round(x*2),RH=(n,d)=>Math.floor((2*n+d)/(2*d))/100;
+  counted.forEach(r=>{const c=+r.credits,p=gp[r.grade],b=r.grade==='F'?0:BONUS[r.level];cr+=c;qp+=p*c;wqp+=(p+b)*c;qN+=H(p)*C2(c);wN+=(H(p)+H(b))*C2(c);cN+=C2(c);});
+  let years=null,multi=false,yearSpan='';
+  if(hs){ years={}; const ys=s.years||[9]; ys.forEach(y=>{const c=counted.filter(r=>r.year===y); if(!c.length) return; let q=0,w=0,n=0,fc=0,fq_=0,fw=0; c.forEach(r=>{const cc=+r.credits,p=gp[r.grade],b=r.grade==='F'?0:BONUS[r.level]; q+=H(p)*C2(cc); w+=(H(p)+H(b))*C2(cc); n+=C2(cc); fc+=cc; fq_+=p*cc; fw+=(p+b)*cc;}); years[y]={u:RH(q,n),w:RH(w,n),cr:fc,qp:fq_,wqp:fw};}); const yk=ys.filter(y=>years[y]).sort((a,b)=>a-b); multi=yk.length>=2; if(multi){ yearSpan='Cumulative · '+yk.length+' years'; const out=[]; ys.forEach(y=>{ const idx=complete.map((r,i)=>r.year===y?i:-1).filter(i=>i>=0); if(!idx.length) return; out.push({name:yName(s,y),grade:'',pts:'',cr:'',qp:'',color:'var(--fg-1)',weight:'700',bg:'var(--gray-50)'}); idx.forEach(i=>out.push(detail[i])); const yr=years[y]; if(yr) out.push({name:'Subtotal',grade:'',pts:f2(yr.u)+' / '+f2(yr.w),cr:fq(yr.cr),qp:fq(yr.qp)+' / '+fq(yr.wqp),color:'var(--fg-2)',weight:'600',bg:'transparent'}); }); detail=out; } }
+  const pv=prevStatus(s);
+  const cr0=counted.reduce((a,r)=>a+(+r.credits),0);
+  const contrib=counted.map(r=>{const pctW=(+r.credits)/cr0*100;const [bg,fg]=shade(gp[r.grade]);return {flex:String(+r.credits),bg,fg,grade:r.grade,label:pctW<8?'':r.grade,name:r.name.trim()||('Class '+(s.rows.indexOf(r)+1)),cr:fq(+r.credits)+' cr'};});
+  return {snapX,years,multi,yearSpan,contrib,gpa:RH(qN,cN),wgpa:RH(wN,cN),cr,qp,wqp,classes:counted.length,cum:pv.use&&!hs?RH(H(pv.g)*C2(pv.c)+qN,C2(pv.c)+cN):null,cumU:pv.use&&hs&&pv.type==='u'?RH(H(pv.g)*C2(pv.c)+qN,C2(pv.c)+cN):null,cumW:pv.use&&hs&&pv.type==='w'?RH(H(pv.g)*C2(pv.c)+wN,C2(pv.c)+cN):null,prevType:pv.type,prevC:pv.use?pv.c:0,prevExcluded:!!pv.err,cumFormula:pv.use?'('+f2(pv.g)+' × '+fq(pv.c)+' + $Q) ÷ ('+fq(pv.c)+' + '+fq(cr)+')':'',skipped,detail,hs};
+}
+const URL_='https://lynote.ai/gpa-calculator';
+const PROMO1='Calculated with Lynote GPA Calculator: '+URL_;
+const PROMO2='Writing a college essay? Check it with Lynote AI Detector and AI Humanizer, free at https://lynote.ai';
+const csvCell=v=>{let t=v==null?'':String(v); if(/^[=+\-@]/.test(t)) t="'"+t; return /[",\n]/.test(t)?'"'+t.replace(/"/g,'""')+'"':t;};
+const csvLine=a=>a.map(csvCell).join(',');
+const esc=t=>String(t==null?'':t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const today=()=>{const d=new Date();const p=n=>String(n).padStart(2,'0');return {iso:d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()),nice:d.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})};};
+function exportModel(res,names){
+  const X=res.snapX, sc=SCALES[X.scale], gp=sc.gp, hs=X.mode==='hs';
+  const ys=X.years, yN=y=>{const n=((names||{})[y]||'').trim();return n||('Year '+(ys.indexOf(y)+1));};
+  const rows=X.rows.filter(r=>r.grade||r.credits).map(r=>{const ex=NOGPA.includes(r.grade), inc=isInc(r); const c=r.credits?+r.credits:null; const p=!ex&&!inc?gp[r.grade]:null; const b=p==null||r.grade==='F'?0:BONUS[r.level]; const w=p==null?null:p+(hs?b:0);
+    const counted=inc?(!r.credits?'no (missing credits)':'no (missing grade)'):ex?"no ("+r.grade+" doesn't count)":'yes';
+    return {year:r.year,yearName:yN(r.year),name:r.name.trim()||('Class '+(X.rows.indexOf(r)+1)),grade:r.grade||'',level:r.level,credits:c,p,w,q:p==null?null:p*c,wq:w==null?null:w*c,counted,ok:counted==='yes',notLabel:inc?(!r.credits?'Not counted (missing credits)':'Not counted (missing grade)'):'Not counted ('+r.grade+')'};});
+  if(hs) rows.sort((a,b)=>ys.indexOf(a.year)-ys.indexOf(b.year));
+  const LT=lettersOf(sc), lt=v=>(LT.find(l=>l[1]<=v+1e-9)||['F'])[0];
+  const pv=X.pv;
+  const U=hs&&res.cumU!=null?res.cumU:(!hs&&res.cum!=null?res.cum:res.gpa), W=hs&&res.cumW!=null?res.cumW:res.wgpa;
+  return {hs,sc,ys,yN,rows,pv,U,W,letter:lt(r2(U)),credits:res.cr+(res.prevC||0)};
+}
+function snap(s){
+  const pv=prevStatus(s);
+  return JSON.stringify([s.scale||'std',s.mode,s.rows.map(r=>[r.grade,r.credits,s.mode==='hs'?r.level:'',s.mode==='hs'?r.year:0]),pv.use?[pv.g,pv.c,pv.type]:null]);
+}
+class Component extends DCLogic {
+  gpaRef=React.createRef();
+  _rr={};_rf={};
+  rowRef(id){ if(!this._rf[id]) this._rf[id]=el=>{this._rr[id]=el;}; return this._rf[id]; }
+  isFlag(r){ const f=this.state.flagged||[]; return f.includes(r.id)&&isInc(r); }
+  goIncomplete=()=>{ const r=this.state.rows.find(x=>this.isFlag(x)); const el=r&&this._rr[r.id]; if(!el) return; const top=el.getBoundingClientRect().top+window.scrollY-120; window.scrollTo({top,behavior:'smooth'}); const sel=el.querySelectorAll('select')[r.grade?1:0]; let done=false; const f=()=>{ if(done) return; done=true; if(Math.abs(window.scrollY-top)>40) window.scrollTo({top}); sel&&sel.focus({preventScroll:true}); }; window.addEventListener('scrollend',f,{once:true}); setTimeout(f,900); };
+  flagIds(s){ return s.rows.filter(isInc).map(r=>r.id); }
+  state={scale:'std',scaleOpen:false,mode:'college',yearNames:{9:'9th grade'},editYear:null,years:[9],yearMenu:null,rows:blanks(),showPrev:false,prevGpa:'',prevCr:'',result:null,lastKey:null,stale:false,loading:false,showDetail:false};
+  componentDidMount(){ if(this.props.demo&&this.props.demo!=='live') this.applyDemo(this.props.demo); }
+  componentDidUpdate(pp){ if(pp.demo!==this.props.demo) this.applyDemo(this.props.demo||'live'); }
+  componentWillUnmount(){ clearTimeout(this._t); }
+  applyDemo(d){
+    clearTimeout(this._t);
+    const base={saved:{},flagged:[],yearNames:{9:'9th grade'},editYear:null,years:[9],yearMenu:null,showPrev:false,prevGpa:'',prevCr:'',result:null,lastKey:null,stale:false,loading:false,showDetail:false};
+    const done=s=>({...s,result:compute(s),lastKey:snap(s)});
+    if(d==='filled') return this.setState({...base,mode:'college',rows:SAMPLE.college(),showPrev:true,prevGpa:'3.40',prevCr:'30'});
+    if(d==='college') return this.setState(done({...base,mode:'college',rows:SAMPLE.college(),showPrev:true,prevGpa:'3.40',prevCr:'30',showDetail:true}));
+    if(d==='hs') return this.setState(done({...base,mode:'hs',years:[9,10],yearNames:{9:'9th grade',10:'10th grade'},rows:SAMPLE.hs(),showDetail:true}));
+    if(d==='stale'){ const s=done({...base,mode:'college',rows:SAMPLE.college(),showPrev:true,prevGpa:'3.40',prevCr:'30'}); s.rows=s.rows.map(r=>r.name==='Biology'?{...r,grade:'B+'}:r); s.stale=true; return this.setState(s); }
+    this.setState({...base,mode:'college',rows:blanks()});
+  }
+  touch(patch){ this.setState(s=>({...patch,stale:!!s.result})); }
+  upd(id,p){ this.setState(s=>({rows:s.rows.map(r=>r.id===id?{...r,...p}:r),stale:!!s.result})); }
+  setMode=m=>{ if(m===this.state.mode) return; clearTimeout(this._t); this.setState(s=>{ const cur={}; TAB_KEYS.forEach(k=>cur[k]=s[k]); const saved={...(s.saved||{}),[s.mode]:cur}; const next=saved[m]||freshTab(); return {...next,mode:m,saved,loading:false}; }); };
+  setScale=k=>{ this.setState(s=>{ if(k===s.scale) return {scaleOpen:false}; const strip=k==='letters'; const fix=rows=>strip?rows.map(r=>r.grade&&!NOGPA.includes(r.grade)?{...r,grade:r.grade.replace(/[+-]$/,'')}:r):rows; const saved={}; Object.entries(s.saved||{}).forEach(([m,t])=>{saved[m]={...t,rows:fix(t.rows),stale:!!t.result};}); return {scale:k,scaleOpen:false,rows:fix(s.rows),stale:!!s.result,saved}; }); };
+  downloadCsv=()=>{ const s=this.state,res=s.result; if(!res||res.noGraded||s.stale) return; const M=exportModel(res,s.yearNames), d=today(), L=[];
+    L.push(csvLine(['GPA Calculator by Lynote',URL_,d.iso])); L.push(csvLine(['Mode',M.hs?'High school':'College'])); L.push(csvLine(['Grading scale',M.sc.label])); L.push('');
+    if(!M.hs){ L.push(csvLine(['Course','Grade','Credits','Grade points','Quality points','Counted'])); M.rows.forEach(r=>L.push(csvLine([r.name,r.grade,r.credits==null?'':fq(r.credits),r.p==null?'':fq(r.p),r.q==null?'':fq(r.q),r.counted]))); L.push('');
+      L.push(csvLine(['Semester GPA',f2(res.gpa)])); L.push(csvLine(['Semester credits',fq(res.cr)])); L.push(csvLine(['Classes this term',res.classes]));
+      if(res.cum!=null){ L.push(csvLine(['Previous GPA',f2(M.pv.g)])); L.push(csvLine(['Credits earned',fq(M.pv.c)])); L.push(csvLine(['Cumulative GPA',f2(res.cum)])); L.push(csvLine(['Total credits',fq(M.credits)])); }
+    } else { L.push(csvLine(['Year','Course','Grade','Level','Credits','Grade points','Weighted points','Quality points','Weighted quality points','Counted'])); M.rows.forEach(r=>L.push(csvLine([r.yearName,r.name,r.grade,r.level,r.credits==null?'':fq(r.credits),r.p==null?'':fq(r.p),r.w==null?'':fq(r.w),r.q==null?'':fq(r.q),r.wq==null?'':fq(r.wq),r.counted]))); L.push('');
+      L.push(csvLine(['Year','Unweighted GPA','Weighted GPA','Credits','Classes'])); M.ys.forEach(y=>{const yr=res.years&&res.years[y]; if(!yr) return; L.push(csvLine([M.yN(y),f2(yr.u),f2(yr.w),fq(yr.cr),M.rows.filter(r=>r.year===y&&r.ok).length]));}); L.push('');
+      const pre=res.multi?'Cumulative ':''; L.push(csvLine([pre+'unweighted GPA'.replace(/^u/,res.multi?'u':'U'),f2(M.U)])); L.push(csvLine([pre+'weighted GPA'.replace(/^w/,res.multi?'w':'W'),f2(M.W)])); L.push(csvLine(['Credits',fq(M.credits)])); L.push(csvLine(['Classes',res.classes]));
+      if(res.prevC){ L.push(csvLine(['Previous GPA',f2(M.pv.g)])); L.push(csvLine(['Previous GPA type',M.pv.type==='w'?'weighted':'unweighted'])); L.push(csvLine(['Credits earned',fq(M.pv.c)])); }
+    }
+    L.push(''); L.push(csvLine([PROMO1])); L.push(csvLine([PROMO2]));
+    const blob=new Blob(['\uFEFF'+L.join('\r\n')],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='lynote-gpa-'+(M.hs?'highschool':'college')+'-'+d.iso+'.csv'; document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500); };
+  printPdf=()=>{ const s=this.state,res=s.result; if(!res||res.noGraded||s.stale) return; const M=exportModel(res,s.yearNames), d=today(), hs=M.hs;
+    const td='padding:7px 10px;border-bottom:1px solid #E6E8EA;text-align:left;', th=td+'font-size:11px;color:#8B9097;font-weight:600;background:#F2F3F5;';
+    const big=(v,l,sub)=>'<div><div style="font-family:var(--font-number);font-size:40px;font-weight:800;line-height:1;color:#6442C9;">'+f2(v)+'</div><div style="margin-top:4px;font-size:12px;font-weight:700;color:#5A6068;">'+esc(l)+'</div>'+(sub?'<div style="font-size:11px;color:#8B9097;margin-top:2px;">'+esc(sub)+'</div>':'')+'</div>';
+    let sum='';
+    if(!hs){ const lbl=res.cum!=null?'Cumulative GPA':(res.prevExcluded?'Current classes only':'Semester GPA'); sum=big(M.U,lbl,res.cum!=null?'Semester GPA '+f2(res.gpa):''); }
+    else { const uS=res.prevType?(res.cumU!=null?'Cumulative':'Current classes only'):(res.multi?res.yearSpan:''), wS=res.prevType?(res.cumW!=null?'Cumulative':'Current classes only'):(res.multi?res.yearSpan:''); sum=big(M.U,'Unweighted',uS)+big(M.W,'Weighted',wS); }
+    sum+='<div style="display:flex;flex-direction:column;justify-content:flex-end;gap:6px;font-size:12px;color:#5A6068;"><div style="font-size:14px;font-weight:700;color:#33373D;">≈ '+M.letter+' average</div><div><b style="color:#1C1F23;font-size:14px;">'+fq(M.credits)+'</b> Credits'+(res.prevC?' ('+fq(res.prevC)+' previous + '+fq(res.cr)+' this term)':'')+'</div><div><b style="color:#1C1F23;font-size:14px;">'+res.classes+'</b> '+(hs?'Classes':'Classes this term')+'</div></div>';
+    const rowHtml=r=>{const g=!r.ok, c=g?'color:#8B9097;':''; return '<tr><td style="'+td+c+'">'+esc(r.name)+'</td><td style="'+td+c+'">'+esc(r.grade)+'</td>'+(hs?'<td style="'+td+c+'">'+esc(r.level)+'</td>':'')+'<td style="'+td+c+'">'+(r.credits==null?'—':fq(r.credits))+'</td>'+(g?'<td colspan="2" style="'+td+c+'">'+esc(r.notLabel)+'</td>':'<td style="'+td+'">'+(hs?fq(r.p)+' / '+fq(r.w):fq(r.p))+'</td><td style="'+td+'text-align:right;">'+(hs?fq(r.q)+' / '+fq(r.wq):fq(r.q))+'</td>')+'</tr>';};
+    const ncol=hs?6:5;
+    let body='';
+    if(hs&&res.multi){ M.ys.forEach(y=>{const rs=M.rows.filter(r=>r.year===y); if(!rs.length) return; body+='<tr><td colspan="'+ncol+'" style="'+td+'font-weight:700;background:#F9FAFB;">'+esc(M.yN(y))+'</td></tr>'+rs.map(rowHtml).join(''); const yr=res.years[y]; if(yr) body+='<tr><td colspan="3" style="'+td+'font-weight:600;color:#5A6068;">Subtotal</td><td style="'+td+'font-weight:600;">'+fq(yr.cr)+'</td><td style="'+td+'font-weight:600;">'+f2(yr.u)+' / '+f2(yr.w)+'</td><td style="'+td+'font-weight:600;text-align:right;">'+fq(yr.qp)+' / '+fq(yr.wqp)+'</td></tr>';}); }
+    else body=M.rows.map(rowHtml).join('');
+    const tot='<tr><td colspan="'+(hs?3:2)+'" style="'+td+'font-weight:700;border-bottom:none;">'+(hs&&res.multi?'Cumulative':'Total')+'</td><td style="'+td+'font-weight:700;border-bottom:none;">'+fq(res.cr)+'</td><td style="'+td+'font-weight:700;border-bottom:none;">'+(hs?f2(res.gpa)+' / '+f2(res.wgpa):'')+'</td><td style="'+td+'font-weight:700;border-bottom:none;text-align:right;">'+(hs?fq(res.qp)+' / '+fq(res.wqp):fq(res.qp))+'</td></tr>';
+    const head='<tr><th style="'+th+'">Course</th><th style="'+th+'">Grade</th>'+(hs?'<th style="'+th+'">Level</th>':'')+'<th style="'+th+'">Credits</th><th style="'+th+'">'+(hs?'Points (U / W)':'Grade points')+'</th><th style="'+th+'text-align:right;">'+(hs?'Quality pts (U / W)':'Quality points')+'</th></tr>';
+    const v=this.renderVals();
+    const formula=esc(v.formulaText)+(hs?'<br>Honors adds 0.5 and AP / IB adds 1.0 to weighted points. F grades get no bonus.':'');
+    const html='<div style="font-family:var(--font-body);color:#1C1F23;max-width:720px;margin:0 auto;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;gap:16px;border-bottom:2px solid #865EFF;padding-bottom:12px;"><img src="assets/logo-lockup.png" alt="Lynote" style="height:26px;"><div style="font-size:16px;font-weight:700;">GPA Calculator · '+(hs?'High school':'College')+'</div></div>'
+      +'<div style="font-size:11px;color:#8B9097;margin-top:8px;">'+esc(d.nice)+' · '+esc(M.sc.label)+' · lynote.ai/gpa-calculator</div>'
+      +'<div style="display:flex;gap:36px;margin:22px 0 20px;padding:18px 20px;border:1px solid #E6E8EA;border-radius:12px;">'+sum+'</div>'
+      +'<table style="width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;border:1px solid #E6E8EA;">'+head+body+tot+'</table>'
+      +'<div style="font-size:11.5px;color:#5A6068;margin-top:12px;line-height:1.6;">'+formula+'</div>'
+      +'<div style="margin-top:28px;padding-top:12px;border-top:1px solid #E6E8EA;font-size:11.5px;color:#5A6068;line-height:1.7;"><div><b style="color:#1C1F23;">Calculated with Lynote GPA Calculator</b> · lynote.ai/gpa-calculator</div><div>Writing a college essay? Check it with Lynote AI Detector and AI Humanizer, free at lynote.ai</div><div style="font-size:10.5px;color:#8B9097;margin-top:4px;">Based on the '+esc(M.sc.note)+'. Your school may use a different scale.</div></div></div>';
+    let st=document.getElementById('gpa-print-style'); if(!st){ st=document.createElement('style'); st.id='gpa-print-style'; st.textContent='@media screen{#gpa-print{display:none}}@media print{body>*:not(#gpa-print){display:none!important}#gpa-print{display:block!important;padding:0}@page{size:A4 portrait;margin:14mm}body{background:#fff!important}}'; document.head.appendChild(st); }
+    let el=document.getElementById('gpa-print'); if(!el){ el=document.createElement('div'); el.id='gpa-print'; document.body.appendChild(el); } el.innerHTML=html;
+    const img=el.querySelector('img'); const go=()=>window.print(); if(img&&!img.complete){ img.onload=go; img.onerror=go; } else go(); };
+  grpCount(s,y){ return s.mode==='hs'?s.rows.filter(r=>r.year===y).length:s.rows.length; }
+  addRow=(y=9)=>{ const s=this.state; if(this.grpCount(s,y)>=(s.mode==='hs'?10:20)) return; this.setState(x=>({rows:[...x.rows,row('','','','Regular',y)]})); };
+  delRow=id=>{ const s=this.state; const r=s.rows.find(x=>x.id===id); if(!r||this.grpCount(s,r.year)<=1) return; this.setState(x=>({rows:x.rows.filter(q=>q.id!==id),stale:!!x.result})); };
+  addYear=()=>{ const s=this.state, ys=s.years||[9]; if(ys.length>=4) return; const y=Math.max(...ys)+1; this.setState(x=>({years:[...ys,y],yearNames:{...(x.yearNames||{}),[y]:ORD[ys.length]||''},yearMenu:null,rows:[...x.rows,row('','','','Regular',y),row('','','','Regular',y),row('','','','Regular',y),row('','','','Regular',y)],stale:!!x.result})); };
+  deleteYear=y=>{ const ys=this.state.years||[9]; if(ys.length<=1) return; this.setState(x=>({years:ys.filter(v=>v!==y),yearMenu:null,rows:x.rows.filter(r=>r.year!==y),stale:!!x.result})); };
+  _yi={};
+  yInRef(y){ if(!this._yi[y]) this._yi[y]=el=>{ if(el&&this._yiFocus===y){ this._yiFocus=null; el.focus(); el.select(); } }; return this._yi[y]; }
+  editYear=y=>{ this._yiFocus=y; this.setState({editYear:y,yearMenu:null}); };
+  saveYear=()=>{ this.setState(x=>{ const n={...(x.yearNames||{})}; if(x.editYear!=null) n[x.editYear]=(n[x.editYear]||'').trim(); return {editYear:null,yearNames:n}; }); };
+  trySample=()=>{ this.setState(s=>{ const saved={}; Object.entries(s.saved||{}).forEach(([m,t])=>{saved[m]=(s.scale||'std')!=='std'?{...t,stale:!!t.result}:t;}); const n={...s,saved,scale:'std',scaleOpen:false,prevType:'u',years:s.mode==='hs'?[9,10]:[9],yearNames:{9:'9th grade',10:'10th grade'},editYear:null,yearMenu:null,rows:SAMPLE[s.mode](),showPrev:false,prevGpa:'',prevCr:''}; return {...n,result:compute(n),lastKey:snap(n),stale:false,showDetail:false}; }); };
+  clearAll=()=>{ clearTimeout(this._t); this.setState({prevType:'u',flagged:[],yearNames:{9:'9th grade'},editYear:null,years:[9],yearMenu:null,rows:blanks(),showPrev:false,prevGpa:'',prevCr:'',result:null,lastKey:null,stale:false,loading:false,showDetail:false}); };
+  calculate=()=>{
+    const s=this.state; if(s.loading) return;
+    const key=snap(s);
+    const flagged=this.flagIds(s);
+    if(s.result&&!s.result.noGraded&&key===s.lastKey){ this.setState({result:compute(s),stale:false,flagged}); return; }
+    const r=compute(s);
+    if(r.noGraded){ this.setState({result:r,stale:false,lastKey:null,flagged}); return; }
+    this.setState({loading:true,flagged});
+    this._t=setTimeout(()=>this.setState(st=>({loading:false,result:compute(st),lastKey:snap(st),stale:false})),700);
+  };
+  renderVals(){
+    const v=this._vals(), s=this.state, hs=s.mode==='hs', res=s.result, has=!!res&&!res.noGraded;
+    const years=hs?(s.years||[9]):[9], max=hs?10:20;
+    const groups=years.map((y,gi)=>{ const rs=v.rows.filter(r=>!hs||r.year===y).map(r=>({...r})); const n=rs.length; rs.forEach(r=>{r.delColor=n>1?'var(--fg-3)':'var(--gray-200)';r.delCursor=n>1?'pointer':'not-allowed';}); const yr=has&&res.years&&res.years[y]; const full=n>=max;
+      const nm=((s.yearNames||{})[y]||''), ed=s.editYear===y;
+      return {showHead:hs,editing:ed,notEditing:!ed,name:nm,label:nm.trim()||('Year '+(gi+1)),nameColor:nm.trim()?'var(--fg-1)':'var(--fg-3)',onEdit:()=>this.editYear(y),hOn:()=>this.setState({hoverYear:y}),hOff:()=>this.setState({hoverYear:null}),penOp:s.hoverYear===y?'1':'0',onName:e=>{const v=e.target.value.slice(0,30);this.setState(x=>({yearNames:{...(x.yearNames||{}),[y]:v}}));},onKey:e=>{if(e.key==='Enter'){e.preventDefault();e.target.blur();}},onSave:this.saveYear,inputRef:this.yInRef(y),resText:yr?f2(yr.u)+' / '+f2(yr.w):'',resColor:s.stale?'var(--gray-300)':'var(--fg-1)',menuOpen:s.yearMenu===y,toggleMenu:()=>this.setState(x=>({yearMenu:x.yearMenu===y?null:y})),onDelete:()=>this.deleteYear(y),delYearColor:years.length>1?'#D73415':'var(--gray-300)',delYearCursor:years.length>1?'pointer':'not-allowed',bt:gi?'1px solid var(--border)':'none',pt:gi?'16px':'0',mt:gi?'10px':'0',rows:rs,addRow:()=>this.addRow(y),addColor:full?'var(--gray-300)':'var(--brand-primary)',addCursor:full?'not-allowed':'pointer',atMax:full,maxText:'You can add up to '+max+' classes'+(hs?' per year.':'.')}; });
+    const canY=years.length<4, multi=has&&hs&&!!res.multi;
+    return {...v,groups,showAddYear:hs,addYear:this.addYear,addYearColor:canY?'var(--brand-primary)':'var(--gray-300)',addYearCursor:canY?'pointer':'not-allowed',hsSpan:multi?res.yearSpan:'',expDisabled:!has||!!s.stale,expPE:(!has||s.stale)?'none':'auto',expTip:has&&!!s.stale&&!!s.expTip,expOn:()=>this.setState({expTip:true}),expOff:()=>this.setState({expTip:false}),downloadCsv:this.downloadCsv,printPdf:this.printPdf,icoCsv:this._ico('download'),icoPrint:this._ico('print'),showContrib:!multi,totLabel:multi?'Cumulative':'Total',totPts:multi?f2(res.gpa)+' / '+f2(res.wgpa):'',classesLabel:hs?'Classes':'Classes this term'};
+  }
+  _ico(n){ this._icos=this._icos||{}; const L=window.LynoteDesignSystem_5037c1&&window.LynoteDesignSystem_5037c1.LyIcon; if(!L) return null; return this._icos[n]||(this._icos[n]=React.createElement(L,{name:n,size:16})); }
+  _vals(){
+    const s=this.state, hs=s.mode==='hs', res=s.result, pv=prevStatus(s);
+    const has=!!res&&!res.noGraded;
+    const anyInput=s.rows.some(r=>r.name||r.grade||r.credits||r.level!=='Regular')||!!s.prevGpa||!!s.prevCr;
+    const complete=s.rows.filter(isDone).length;
+    const atMax=s.rows.length>=20;
+    return {
+      modeTabs:[{value:'college',label:'College'},{value:'hs',label:'High school'}],
+      mode:s.mode,setMode:this.setMode,isHs:hs,isCollege:!hs,
+      isEmpty:!anyInput&&!res,notEmpty:!!(anyInput||res),trySample:this.trySample,clearAll:this.clearAll,
+      cols:hs?'minmax(0,1fr) 84px 70px 100px 28px':'minmax(0,1fr) 92px 76px 28px',
+      gradeOpts:gradeOptsOf(scOf(s)),scaleName:scOf(s).name,scaleNote:'Based on the '+scOf(s).note+'. Your school may use a different scale.',scaleOpen:!!s.scaleOpen,scaleCaret:s.scaleOpen?'rotate(180deg)':'none',toggleScale:()=>this.setState(x=>({scaleOpen:!x.scaleOpen})),
+      scaleOpts:SCALE_KEYS.map(k=>({label:SCALES[k].label,pick:()=>this.setScale(k),check:k===(s.scale||'std')?'1':'0',color:k===(s.scale||'std')?'var(--brand-primary)':'var(--fg-1)',weight:k===(s.scale||'std')?'700':'500'})),
+      ...(()=>{const mx=scOf(s).max,pc=v=>(v/mx*100)+'%';return {seg1:pc(2),seg2:pc(1),seg3:pc(0.7),seg4:pc(mx-3.7),t2:pc(2),t3:pc(3),t37:pc(3.7),deanLeft:pc(3.5),maxText:mx.toFixed(mx===4?1:2)};})(),crOpts:CR[s.mode],levelOpts:LEVELS,
+      rows:s.rows.map((r,i)=>{const fl=this.isFlag(r);return {...r,ref:this.rowRef(r.id),ringBg:fl?'var(--warning-100)':'transparent',gradeBorder:fl&&!r.grade?'var(--warning)':'var(--border)',crBorder:fl&&!r.credits?'var(--warning)':'var(--border)',hint:fl?(!r.credits?'Add credits to include this class.':'Add a grade to include this class.'):'',ph:i===0?'e.g. Calculus':'',
+        gradeColor:r.grade?'var(--fg-1)':'var(--fg-3)',crColor:r.credits?'var(--fg-1)':'var(--fg-3)',
+        delColor:s.rows.length>1?'var(--fg-3)':'var(--gray-200)',delCursor:s.rows.length>1?'pointer':'not-allowed',
+        onName:e=>this.upd(r.id,{name:e.target.value}),onGrade:e=>this.upd(r.id,{grade:e.target.value}),
+        onCredits:e=>this.upd(r.id,{credits:e.target.value}),onLevel:e=>this.upd(r.id,{level:e.target.value}),onDel:()=>this.delRow(r.id)};}),goIncomplete:this.goIncomplete,
+      addRow:this.addRow,atMax,addColor:atMax?'var(--gray-300)':'var(--brand-primary)',addCursor:atMax?'not-allowed':'pointer',
+      showPrevLink:!s.showPrev,showPrevFields:!!s.showPrev,prevType:s.prevType||'u',onPrevType:e=>this.touch({prevType:e.target.value}),
+      openPrev:()=>this.setState({showPrev:true}),closePrev:()=>this.touch({showPrev:false,prevGpa:'',prevCr:'',prevType:'u'}),
+      prevGpa:s.prevGpa,prevCr:s.prevCr,onPrevGpa:e=>this.touch({prevGpa:e.target.value}),onPrevCr:e=>this.touch({prevCr:e.target.value}),
+      prevErr:pv.err||'',prevHint:pv.hint||'',gpaBorder:pv.err?'#FF2621':'var(--border)',
+      calcDisabled:!complete||s.loading,calcLabel:s.loading?'Calculating…':'Calculate',calculate:this.calculate,
+      fresh:has&&!s.stale,notFresh:!(has&&!s.stale),stale:has&&s.stale,hasResult:has,
+      ...(()=>{ if(!has) return {letterText:'',letterColor:'var(--fg-2)',dotLeft:'0%',deanText:'',contrib:[],scaleOpacity:'1'}; const big=r2(!hs&&res.cum!=null?res.cum:(hs&&res.cumU!=null?res.cumU:res.gpa)), sv=big; const LT=lettersOf(scOf(s)),mx=scOf(s).max; const lt=v=>(LT.find(l=>l[1]<=v+1e-9)||['F'])[0]; return {letterText:'≈ '+lt(big)+' average',letterColor:s.stale?'var(--gray-300)':'var(--fg-2)',dotLeft:(Math.max(0,Math.min(mx,sv))/mx*100)+'%',deanText:sv>=3.5?"You're above a common Dean's List cutoff (3.5).":"You're "+r2(3.5-sv).toFixed(2)+" below a common Dean's List cutoff (3.5).",contrib:res.contrib||[],scaleOpacity:s.stale?'.45':'1'}; })(),
+      gpaText:has?f2(!hs&&res.cum!=null?res.cum:(hs&&res.cumU!=null?res.cumU:res.gpa)):'—',uSub:has&&hs&&res.prevType?(res.cumU!=null?'Cumulative':'Current classes only'):'',wSub:has&&hs&&res.prevType?(res.cumW!=null?'Cumulative':'Current classes only'):'',hsPrevExcluded:has&&hs&&!!res.prevExcluded,wText:has?f2(res.cumW!=null?res.cumW:res.wgpa):'—',
+      crText:has?fq(res.cr+(res.prevC||0)):'—',crSub:has&&res.prevC?fq(res.prevC)+' previous + '+fq(res.cr)+' this term':'',
+      gpaRef:this.gpaRef,deanTip:!!s.deanTip,deanOn:()=>this.setState({deanTip:true}),deanOff:()=>this.setState({deanTip:false}),fixPrev:()=>{const el=this.gpaRef.current;if(el){el.focus();el.select&&el.select();}},
+      bigLabel:has&&res.cum!=null?'Cumulative GPA':(has&&res.prevExcluded&&!hs?'Current classes only':'Semester GPA'),semText:has?f2(res.gpa):'',prevExcluded:has&&!hs&&!!res.prevExcluded,clText:has?String(res.classes):'—',secColor:has&&!s.stale?'var(--fg-1)':'var(--gray-300)',
+      isEmptyResult:!res,noGraded:!!res&&!!res.noGraded,
+      hasCum:has&&res.cum!=null,cumText:has&&res.cum!=null?f2(res.cum):'',
+      showDetail:has&&s.showDetail,toggleDetail:()=>this.setState(x=>({showDetail:!x.showDetail})),caretRot:s.showDetail?'rotate(180deg)':'none',
+      tableOpacity:s.stale?'.5':'1',ptsHead:hs?'Points (U / W)':'Points',qpHead:hs?'QP (U / W)':'Quality pts',
+      detailRows:has?res.detail:[],totCr:has?fq(res.cr):'',totQp:has?(res.hs?fq(res.qp)+' / '+fq(res.wqp):fq(res.qp)):'',
+      formulaText:has?(res.hs?'Unweighted = '+fq(res.qp)+' ÷ '+fq(res.cr)+' = '+f2(res.gpa)+' · Weighted = '+fq(res.wqp)+' ÷ '+fq(res.cr)+' = '+f2(res.wgpa)+(res.cumU!=null?' · Cumulative unweighted = '+res.cumFormula.replace('$Q',fq(res.qp))+' = '+f2(res.cumU):'')+(res.cumW!=null?' · Cumulative weighted = '+res.cumFormula.replace('$Q',fq(res.wqp))+' = '+f2(res.cumW):''):'Semester GPA = '+fq(res.qp)+' ÷ '+fq(res.cr)+' = '+f2(res.gpa)+(res.cum!=null?' · Cumulative = '+res.cumFormula.replace('$Q',fq(res.qp))+' = '+f2(res.cum):'')):'',
+      skippedText:res&&res.skipped?res.skipped+' incomplete row'+(res.skipped>1?'s were':' was')+' skipped.':''
+    };
+  }
+}
+</script>
+</body>
+</html>

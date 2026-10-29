@@ -1,0 +1,5 @@
+Lynote official tool recommendation icons, reused to match the existing online component.
+Source: https://lynote.ai/ai-detector
+ai-bubble.png: https://strapi.lynote.ai/uploads/_89df5b4ac2.png
+document.png: https://strapi.lynote.ai/uploads/47404_3_e129d0b46a.png
+search.png: https://strapi.lynote.ai/uploads/47404_178ce2a391.png
