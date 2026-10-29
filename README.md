@@ -1,9 +1,9 @@
 # Lynote GPA Calculator — 设计与开发交付
 
-最终设计版本：v24 · 2026-10-29。此仓库包含可直接预览的静态页面、可编辑源码、资源和交付说明。
+最终设计版本：v25 · 2026-10-29。此仓库包含可直接预览的静态页面、可编辑源码、资源和交付说明。
 
 - [在线页面](https://taryntong00-prog.github.io/lynote-gpa-calculator/gpa-calculator/)
-- [原始设计预览 v24](https://lynote-gpa-calculator-guide.banhpigat19.chatgpt.site/gpa-calculator/?v=24)
+- [原始设计预览 v24（历史版本）](https://lynote-gpa-calculator-guide.banhpigat19.chatgpt.site/gpa-calculator/?v=24)
 - [设计与开发交付说明](HANDOFF.md)
 - [重点版块截图](design-previews/)
 

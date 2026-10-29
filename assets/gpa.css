@@ -523,3 +523,34 @@ html,body.gpa-page{height:auto!important;min-height:100%}
 #weighted-gpa .weighted-table tfoot tr>:nth-last-child(2){background:#dfeefa;color:#24567f;font-size:17px;font-weight:750}
 #weighted-gpa .weighted-table tfoot tr>:last-child{background:#e7dcf5;color:#68409f;font-size:17px;font-weight:750}
 @media(max-width:760px){#weighted-gpa .weighted-table thead tr>:nth-last-child(-n+2){font-size:12px}#weighted-gpa .weighted-table tbody tr>:nth-last-child(-n+2){font-size:15px}#weighted-gpa .weighted-table tfoot tr>:nth-last-child(-n+2){font-size:16px}}
+
+/* Six illustrative review cards in the shared Lynote carousel style. */
+#user-reviews{isolation:isolate;padding:68px 0 58px}
+#user-reviews:before{content:"";position:absolute;inset:0 auto 0 50%;width:100vw;transform:translateX(-50%);background:#f7f8fc;z-index:-1}
+#user-reviews .marketing-heading{margin-bottom:38px}
+#user-reviews .marketing-heading>p{font-size:13px;color:#647083;margin-top:13px}
+.gpa-reviews-carousel{--reviews-per-view:3;--reviews-gap:24px;min-width:0}
+.gpa-reviews-track{list-style:none;margin:0;padding:2px;display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 2 * var(--reviews-gap)) / 3);gap:var(--reviews-gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-x:contain;scroll-padding-inline:2px}
+.gpa-reviews-track::-webkit-scrollbar{display:none}
+.gpa-reviews-track>li{min-width:0;display:flex;scroll-snap-align:start}
+#user-reviews .gpa-review-card{width:100%;min-height:310px;padding:26px;border:1px solid #e1e5ee;border-radius:18px;background:#fff;box-shadow:none}
+.review-stars{display:block;color:#ff9500;font-size:23px;line-height:1.3;letter-spacing:3px;margin-bottom:20px}
+#user-reviews .review-sample-copy{padding:0;border:0;margin:0;flex:1;font-style:italic}
+#user-reviews .review-sample-copy p{font-size:15px;line-height:1.85;color:#455163;margin:0}
+#user-reviews .review-person{margin-top:32px;gap:12px;align-items:center}
+#user-reviews .review-avatar{width:42px;height:42px;background:#edf0ff;color:#5e7df4;font:700 14px/1 Inter,Arial,sans-serif}
+#user-reviews .review-person h3{font-size:15px;line-height:1.5;color:#20252b;letter-spacing:-.02em}
+#user-reviews .review-person p{font-size:12px;line-height:1.6;color:#717c8e;margin-top:3px}
+.review-controls{display:flex;justify-content:center;align-items:center;gap:23px;margin-top:28px}
+.review-controls>button{width:44px;height:44px;display:grid;place-items:center;border:1px solid #dce1ec;border-radius:50%;background:#fff;color:#66788e;cursor:pointer;transition:background .15s,border-color .15s}
+.review-controls>button svg{width:20px;height:20px}
+.review-controls>button:hover:not(:disabled){border-color:#8d9ef8;background:#eef1ff;color:#5676f5}
+.review-controls>button:disabled{opacity:.4;cursor:default}
+.review-dots{display:flex;align-items:center;gap:1px}
+.review-dots button{display:grid;place-items:center;min-width:28px;min-height:44px;border:0;background:transparent;padding:0 7px;cursor:pointer}
+.review-dots button:before{content:"";display:block;width:7px;height:7px;border-radius:8px;background:#d2d9e5;transition:width .15s,background .15s}
+.review-dots button[aria-current="true"]:before{width:27px;background:#6282ff}
+.review-controls button:focus-visible,.gpa-reviews-track:focus-visible{outline:2px solid #6b83ef;outline-offset:4px}
+@media(max-width:1000px) and (min-width:681px){.gpa-reviews-carousel{--reviews-per-view:2;--reviews-gap:20px}.gpa-reviews-track{grid-auto-columns:calc((100% - var(--reviews-gap)) / 2)}}
+@media(max-width:680px){#user-reviews{padding:46px 0 40px}#user-reviews .marketing-heading{margin-bottom:26px}.gpa-reviews-carousel{--reviews-per-view:1;--reviews-gap:16px}.gpa-reviews-track{grid-auto-columns:100%}#user-reviews .gpa-review-card{min-height:310px;padding:25px}.review-controls{gap:15px;margin-top:22px}.review-dots button{min-width:22px;padding:0 5px}#user-reviews .review-person{margin-top:27px}}
+@media(prefers-reduced-motion:reduce){.review-controls button,.review-dots button:before{transition:none}}

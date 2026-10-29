@@ -30,3 +30,44 @@ if(relatedTrack){
   new ResizeObserver(updateRelatedButtons).observe(relatedTrack);
   updateRelatedButtons();
 }
+
+// Review carousel: three cards on desktop, two on tablet, one on mobile.
+const reviewsTrack=$('#gpa-reviews-track');
+if(reviewsTrack){
+  const carousel=reviewsTrack.closest('.gpa-reviews-carousel');
+  const previous=carousel.querySelector('.review-previous'),next=carousel.querySelector('.review-next');
+  const dots=carousel.querySelector('.review-dots'),status=carousel.querySelector('.review-page-status');
+  const cards=Array.from(reviewsTrack.children);
+  let perView=0,pageCount=0,currentPage=0;
+  const stride=()=>cards[0].getBoundingClientRect().width+parseFloat(getComputedStyle(reviewsTrack).columnGap);
+  const moveTo=page=>{
+    const bounded=Math.max(0,Math.min(pageCount-1,page));
+    reviewsTrack.scrollTo({left:bounded*perView*stride(),behavior:matchMedia('(prefers-reduced-motion:reduce)').matches?'auto':'smooth'});
+  };
+  const update=()=>{
+    currentPage=Math.max(0,Math.min(pageCount-1,Math.round(reviewsTrack.scrollLeft/(stride()*perView))));
+    previous.disabled=currentPage===0;next.disabled=currentPage===pageCount-1;
+    Array.from(dots.children).forEach((dot,index)=>dot.setAttribute('aria-current',String(index===currentPage)));
+    const start=currentPage*perView+1,end=Math.min(cards.length,start+perView-1);
+    status.textContent=`Examples ${start}–${end} of ${cards.length}`;
+  };
+  const resize=()=>{
+    const visible=parseInt(getComputedStyle(carousel).getPropertyValue('--reviews-per-view'),10)||1;
+    if(visible!==perView){
+      const firstVisible=currentPage*perView;
+      perView=visible;pageCount=Math.ceil(cards.length/perView);dots.replaceChildren();
+      for(let i=0;i<pageCount;i++){
+        const dot=document.createElement('button');dot.type='button';dot.setAttribute('aria-label',`Show examples ${i*perView+1}–${Math.min(cards.length,(i+1)*perView)}`);dot.setAttribute('aria-controls','gpa-reviews-track');dot.addEventListener('click',()=>moveTo(i));dots.append(dot);
+      }
+      reviewsTrack.scrollTo({left:Math.floor(firstVisible/perView)*perView*stride(),behavior:'instant'});
+    }
+    update();
+  };
+  previous.addEventListener('click',()=>moveTo(currentPage-1));next.addEventListener('click',()=>moveTo(currentPage+1));
+  reviewsTrack.addEventListener('scroll',update,{passive:true});
+  reviewsTrack.addEventListener('keydown',event=>{
+    if(!['ArrowLeft','ArrowRight','Home','End'].includes(event.key))return;
+    event.preventDefault();moveTo(event.key==='Home'?0:event.key==='End'?pageCount-1:currentPage+(event.key==='ArrowRight'?1:-1));
+  });
+  new ResizeObserver(resize).observe(reviewsTrack);resize();
+}
